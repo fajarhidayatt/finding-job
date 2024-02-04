@@ -18,7 +18,7 @@ const Navbar = () => {
   });
 
   return (
-    <nav className="max-w-screen-xl w-full mx-auto container py-2">
+    <nav className="max-w-screen-xl w-full mx-auto container py-2 bg-white">
       <div className="flex flex-col md:flex-row md:items-center">
         <div className="flex items-center justify-between">
           <Link href="/" className="w-48">
@@ -42,7 +42,7 @@ const Navbar = () => {
           <ul className="w-full flex flex-col md:flex-row gap-3">
             <li>
               <Link
-                href="/"
+                href="/find-jobs"
                 className="font-medium text-muted-foreground hover:text-primary"
               >
                 Find Jobs
