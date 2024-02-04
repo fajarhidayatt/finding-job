@@ -11,7 +11,7 @@ const Navbar = () => {
   const [toggle, setToggle] = useState<boolean>(false);
 
   const linkContainer = clsx({
-    'w-full md:max-h-screen flex flex-col md:flex-row md:items-center gap-3 overflow-hidden transition-max-height duration-500 mt-5 md:mt-0 md:ml-10':
+    'w-full md:max-h-screen flex flex-col md:flex-row md:items-center gap-3 overflow-hidden transition-max-height duration-500 md:ml-10':
       true,
     'max-h-screen': toggle,
     'max-h-0': !toggle,
@@ -39,7 +39,7 @@ const Navbar = () => {
           </Button>
         </div>
         <div className={linkContainer}>
-          <ul className="w-full flex flex-col md:flex-row gap-3">
+          <ul className="w-full flex flex-col md:flex-row gap-3 mt-5 md:mt-0">
             <li>
               <Link
                 href="/find-jobs"
@@ -50,7 +50,7 @@ const Navbar = () => {
             </li>
             <li>
               <Link
-                href="/"
+                href="/browse-companies"
                 className="font-medium text-muted-foreground hover:text-primary"
               >
                 Browse Company
