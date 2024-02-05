@@ -1,5 +1,7 @@
 import Navbar from './Navbar';
 import Footer from './Footer';
+import Sidebar from './Sidebar';
+
 import FormSearch from './FormSearch';
 
 import CategoryCard from './Card/CategoryCard';
@@ -14,6 +16,7 @@ import FormUploadFile from './Form/FormUploadFile';
 export {
   Navbar,
   Footer,
+  Sidebar,
   FormSearch,
   CategoryCard,
   JobCard,
