@@ -12,6 +12,7 @@ import BenefitCard from './Card/BenefitCard';
 import FormFilter from './Form/FormFilter';
 import FormApply from './Form/FormApply';
 import FormUploadFile from './Form/FormUploadFile';
+import FormBenefit from './Form/FormBenefit';
 
 export {
   Navbar,
@@ -25,4 +26,5 @@ export {
   FormFilter,
   FormApply,
   FormUploadFile,
+  FormBenefit,
 };

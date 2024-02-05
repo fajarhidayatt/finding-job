@@ -38,7 +38,10 @@ const Sidebar = () => {
           </Link>
         </li>
         <li className="p-3 text-sm rounded-md hover:bg-primary/10 hover:text-primary">
-          <Link href="company/job-listings" className="flex items-center gap-5">
+          <Link
+            href="/dashboard/company/job-listings"
+            className="flex items-center gap-5"
+          >
             <ClipboardList className="w-5 h-5" />
             <span>Job Listings</span>
           </Link>

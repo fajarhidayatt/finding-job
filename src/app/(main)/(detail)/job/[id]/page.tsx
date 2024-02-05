@@ -77,7 +77,7 @@ const DetailJob = () => {
               {[1, 2, 3].map((item: number) => (
                 <BenefitCard
                   key={item}
-                  title="Push Career"
+                  name="Push Career"
                   description="lorem ipsum dolor sit amet"
                 />
               ))}

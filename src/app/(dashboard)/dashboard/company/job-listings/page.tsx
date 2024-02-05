@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import Link from 'next/link';
 
 const JOB_LISTING_COLUMNS: string[] = [
   'Roles',
@@ -25,10 +26,12 @@ const JobListings = () => {
     <div className="py-5">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold">Job Listings</h1>
-        <Button size="sm">
-          <Plus className="mr-2" />
-          Post a job
-        </Button>
+        <Link href="/dashboard/company/post-a-job">
+          <Button type="button" size="sm">
+            <Plus className="mr-2" />
+            Post a job
+          </Button>
+        </Link>
       </div>
 
       <div className="mt-5">

@@ -1,3 +1,7 @@
 import { Breadcrumb, BreadcrumbItem } from './Breadcrumb';
 
-export { Breadcrumb, BreadcrumbItem };
+import InputSkill from './Input/InputSkill';
+import InputCKEditor from './Input/InputCKEditor';
+import InputBenefit from './Input/InputBenefit';
+
+export { Breadcrumb, BreadcrumbItem, InputSkill, InputCKEditor, InputBenefit };
