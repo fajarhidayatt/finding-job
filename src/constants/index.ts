@@ -14,3 +14,19 @@ export const JOB_CATEGORIES: string[] = [
   'AI',
   'Marketing',
 ];
+
+export const EMPLOYEE_OPTIONS: string[] = [
+  '1-50',
+  '51-150',
+  '151-250',
+  '251-500',
+  '501-1000',
+  '1000-above',
+] as const;
+
+export const ACCEPTED_IMAGE_TYPES = [
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'image/webp',
+] as const;

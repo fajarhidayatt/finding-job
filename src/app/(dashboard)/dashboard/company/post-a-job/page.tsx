@@ -15,7 +15,6 @@ import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import InputWrapper from './_PostJobPartials/InputWrapper';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import {
   Select,
@@ -24,7 +23,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { InputBenefit, InputCKEditor, InputSkill } from '@/components/atoms';
+import {
+  InputBenefit,
+  InputCKEditor,
+  InputSkill,
+  InputWrapper,
+} from '@/components/atoms';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { formJobSchema } from '@/lib/validations';

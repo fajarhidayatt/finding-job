@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import { TBenefit } from '@/types';
 import { BenefitCard, FormBenefit } from '@/components/molecules';
