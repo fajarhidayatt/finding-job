@@ -1,3 +1,5 @@
+'use client';
+
 import { MoreVertical, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -10,6 +12,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const JOB_LISTING_COLUMNS: string[] = [
   'Roles',
@@ -22,6 +25,12 @@ const JOB_LISTING_COLUMNS: string[] = [
 ];
 
 const JobListings = () => {
+  const router = useRouter();
+
+  const handleNavigate = () => {
+    router.push('/dashboard/company/job-detail/1');
+  };
+
   return (
     <div className="py-5">
       <div className="flex items-center justify-between">
@@ -65,7 +74,11 @@ const JobListings = () => {
                   {12} / {20}
                 </TableCell>
                 <TableCell>
-                  <Button size="icon" variant="outline">
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    onClick={handleNavigate}
+                  >
                     <MoreVertical />
                   </Button>
                 </TableCell>
