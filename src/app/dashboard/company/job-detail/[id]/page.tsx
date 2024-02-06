@@ -2,8 +2,8 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ArrowLeft } from 'lucide-react';
-import TabApplicants from './_IdPartials/TabApplicants';
-import TabJobDetail from './_IdPartials/TabJobDetail';
+import TabApplicants from './_idPartials/TabApplicants';
+import TabJobDetail from './_idPartials/TabJobDetail';
 import { useRouter } from 'next/navigation';
 
 const CompanyJobDetail = () => {

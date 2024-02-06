@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import TabOverview from './_ProfilePartials/TabOverview';
-import TabSocialLinks from './_ProfilePartials/TabSocialLinks';
+import TabOverview from './_profilePartials/TabOverview';
+import TabSocialLinks from './_profilePartials/TabSocialLinks';
 
 const CompanyProfilePage = () => {
   return (

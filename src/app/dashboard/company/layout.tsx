@@ -1,8 +1,11 @@
-import { Sidebar } from '@/components/molecules';
 import { Metadata } from 'next';
+import { Sidebar } from '@/components/molecules';
 
 export const metadata: Metadata = {
-  title: 'Company',
+  title: {
+    template: 'Dashboard | %s',
+    default: 'Dashboard | Company',
+  },
 };
 
 export default function DashboardCompanyLayout({

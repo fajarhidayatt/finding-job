@@ -2,22 +2,26 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { CompanyCard, FormFilter, FormSearch } from '@/components/molecules';
+import {
+  TopSection,
+  FormFilter,
+  FormSearch,
+  JobCard,
+} from '@/components/molecules';
 import { Filter } from 'lucide-react';
 
-import TopSection from '../_ExplorePartials/TopSection';
-
-const BrowseCompanies = () => {
+const JobsPage = () => {
   const [showFilter, setShowFilter] = useState<boolean>(false);
 
   return (
     <main>
       <TopSection
-        title={['Find your', 'dream company']}
-        description="Find the dream company you dream work for"
+        title={['Find your', 'dream job']}
+        description="Find your next career at companies like HubSpot, Nike, and Dropbox"
       >
         <FormSearch />
       </TopSection>
+
       <section className="max-w-screen w-full mx-auto container flex items-start justify-center gap-10 py-16">
         <FormFilter
           title="Categories"
@@ -25,10 +29,12 @@ const BrowseCompanies = () => {
           showFilter={showFilter}
           handleShowFilter={() => setShowFilter(false)}
         />
+
+        {/* List */}
         <div className="w-full">
           <div className="mb-8 flex items-center justify-between">
             <div>
-              <h3 className="text-3xl font-semibold">All Companies</h3>
+              <h3 className="text-3xl font-semibold">All Jobs</h3>
               <p className="text-muted-foreground">Showing 10 Result</p>
             </div>
             <div className="block lg:hidden">
@@ -40,7 +46,7 @@ const BrowseCompanies = () => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {[1, 2, 3, 4, 5, 6].map((item: number) => (
-              <CompanyCard key={item} />
+              <JobCard key={item} />
             ))}
           </div>
         </div>
@@ -49,4 +55,4 @@ const BrowseCompanies = () => {
   );
 };
 
-export default BrowseCompanies;
+export default JobsPage;

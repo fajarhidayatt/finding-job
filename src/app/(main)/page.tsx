@@ -1,9 +1,9 @@
-import HeroSection from './_HomePartials/HeroSection';
-import ClientsSection from './_HomePartials/ClientsSection';
-import CategorySection from './_HomePartials/CategorySection';
-import BannerSection from './_HomePartials/BannerSection';
-import FeaturedSection from './_HomePartials/FeaturedSection';
-import LatestJobSection from './_HomePartials/LatestJobSection';
+import HeroSection from './_homePartials/HeroSection';
+import ClientsSection from './_homePartials/ClientsSection';
+import CategorySection from './_homePartials/CategorySection';
+import BannerSection from './_homePartials/BannerSection';
+import FeaturedSection from './_homePartials/FeaturedSection';
+import LatestJobSection from './_homePartials/LatestJobSection';
 
 const Home = () => {
   return (

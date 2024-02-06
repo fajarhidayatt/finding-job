@@ -3,7 +3,7 @@ import { JobCard } from '@/components/molecules';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Facebook, Linkedin, Twitter } from 'lucide-react';
-import InfoCompany from './_IdPartials/InfoCompany';
+import InfoCompany from './_idPartials/InfoCompany';
 
 const DetailCompany = () => {
   return (

@@ -1,9 +1,9 @@
 import { Breadcrumb, BreadcrumbItem } from '@/components/atoms';
 import { BenefitCard } from '@/components/molecules';
 import { Separator } from '@/components/ui/separator';
-import InfoGroup from './_IdPartials/InfoGroup';
-import InfoItem from './_IdPartials/InfoItem';
-import InfoJob from './_IdPartials/InfoJob';
+import InfoGroup from './_idPartials/InfoGroup';
+import InfoItem from './_idPartials/InfoItem';
+import InfoJob from './_idPartials/InfoJob';
 
 const DetailJob = () => {
   const lorem =

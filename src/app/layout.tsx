@@ -6,13 +6,10 @@ import { Epilogue } from 'next/font/google';
 const epilogue = Epilogue({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: {
-    template: 'Dashboard | %s',
-    default: 'Dashboard',
-  },
+  description: 'Find your dream job easier',
 };
 
-export default function RootDashboardLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

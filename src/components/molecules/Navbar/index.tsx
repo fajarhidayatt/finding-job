@@ -18,7 +18,7 @@ const Navbar = () => {
   });
 
   return (
-    <nav className="max-w-screen-xl w-full mx-auto container py-2 bg-white">
+    <nav className="max-w-screen-xl w-full mx-auto container py-3 bg-white">
       <div className="flex flex-col md:flex-row md:items-center">
         <div className="flex items-center justify-between">
           <Link href="/" className="w-48">
@@ -42,7 +42,7 @@ const Navbar = () => {
           <ul className="w-full flex flex-col md:flex-row gap-3 mt-5 md:mt-0">
             <li>
               <Link
-                href="/find-jobs"
+                href="/jobs"
                 className="font-medium text-muted-foreground hover:text-primary"
               >
                 Find Jobs
@@ -50,7 +50,7 @@ const Navbar = () => {
             </li>
             <li>
               <Link
-                href="/browse-companies"
+                href="/companies"
                 className="font-medium text-muted-foreground hover:text-primary"
               >
                 Browse Company
@@ -58,13 +58,17 @@ const Navbar = () => {
             </li>
           </ul>
           <div className="flex flex-col md:flex-row md:items-center gap-3">
-            <Button
-              variant="outline"
-              className="border-primary text-primary hover:bg-primary/10 hover:text-primary"
-            >
-              Sign In
-            </Button>
-            <Button>Sign Up</Button>
+            <Link href="/signin">
+              <Button
+                variant="outline"
+                className="border-primary text-primary hover:bg-primary/10 hover:text-primary"
+              >
+                Sign In
+              </Button>
+            </Link>
+            <Link href="/signup">
+              <Button>Sign Up</Button>
+            </Link>
           </div>
         </div>
       </div>
