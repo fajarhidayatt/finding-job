@@ -30,7 +30,7 @@ const clients: TClient[] = [
 
 const ClientsSection = () => {
   return (
-    <section className="container pt-5 pb-14">
+    <section className="container my-10 md:my-16">
       <h5 className="text-lg text-muted-foreground">
         Companies we helped grow
       </h5>

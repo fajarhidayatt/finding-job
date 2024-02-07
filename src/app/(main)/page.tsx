@@ -7,7 +7,7 @@ import LatestJobSection from './_homePartials/LatestJobSection';
 
 const Home = () => {
   return (
-    <main className="max-w-screen-xl w-full mx-auto">
+    <main className="min-h-[calc(100vh-452px)]">
       <HeroSection />
       <ClientsSection />
       <CategorySection />

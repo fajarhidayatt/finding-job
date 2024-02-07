@@ -61,13 +61,13 @@ const Navbar = () => {
             <Link href="/signin">
               <Button
                 variant="outline"
-                className="border-primary text-primary hover:bg-primary/10 hover:text-primary"
+                className="w-full border-primary text-primary hover:bg-primary/10 hover:text-primary"
               >
                 Sign In
               </Button>
             </Link>
             <Link href="/signup">
-              <Button>Sign Up</Button>
+              <Button className="w-full">Sign Up</Button>
             </Link>
           </div>
         </div>

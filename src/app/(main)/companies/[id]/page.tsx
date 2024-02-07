@@ -7,12 +7,12 @@ import InfoCompany from './_idPartials/InfoCompany';
 
 const DetailCompany = () => {
   return (
-    <main>
+    <main className="min-h-[calc(100vh-452px)]">
       <section className="bg-slate-100 py-10">
-        <div className="max-w-screen-xl w-full mx-auto container">
+        <div className="container">
           <Breadcrumb>
             <BreadcrumbItem url="/">Home</BreadcrumbItem>
-            <BreadcrumbItem url="/browse-companies">Companies</BreadcrumbItem>
+            <BreadcrumbItem url="/companies">Companies</BreadcrumbItem>
             <BreadcrumbItem url="/" isLast>
               Twitter
             </BreadcrumbItem>
@@ -21,7 +21,7 @@ const DetailCompany = () => {
         </div>
       </section>
 
-      <section className="max-w-screen-xl w-full mx-auto container py-16 grid grid-cols-12 gap-5 md:gap-10">
+      <section className="container py-16 grid grid-cols-12 gap-5 md:gap-10">
         <div className="space-y-10 col-span-full md:col-span-7 lg:col-span-8 xl:col-span-9">
           <div>
             <h3 className="text-2xl font-semibold mb-3">Company Profile</h3>

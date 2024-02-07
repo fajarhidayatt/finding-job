@@ -23,7 +23,7 @@ const socialMediaImg = [
 const Footer = () => {
   return (
     <footer className="bg-slate-900">
-      <div className="max-w-screen-xl w-full mx-auto container pt-10 pb-5">
+      <div className="container pt-10 pb-5">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-8 lg:gap-4">
           {/* logo */}
           <section className="order-1 lg:col-span-2">

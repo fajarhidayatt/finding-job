@@ -4,10 +4,10 @@ import { FormSearch } from '@/components/molecules';
 const HeroSection = () => {
   return (
     <section className="container flex items-center justify-between relative overflow-hidden">
-      <div className="absolute w-4/5 aspect-square top-0 right-0 -z-10">
+      <div className="w-4/5 aspect-square absolute top-0 right-0 -z-10">
         <Image src="/images/pattern-hero.png" alt="hero pattern" fill />
       </div>
-      <div className="lg:w-1/2 py-10 mx-auto text-center lg:text-left">
+      <div className="lg:w-1/2 mt-10 mx-auto text-center lg:text-left">
         <div className="max-w-lg w-full mx-auto lg:mx-0">
           <h1 className="text-5xl md:text-7xl font-semibold relative">
             Discover <br /> more than <br />
@@ -19,7 +19,7 @@ const HeroSection = () => {
               alt="pattern"
               width={455}
               height={32}
-              className="max-w-md w-full block mx-auto lg:mx-0 object-contain"
+              className="block max-w-md w-full mx-auto lg:mx-0 object-contain"
             />
           </div>
           <p className="text-lg text-muted-foreground mb-6">
@@ -35,8 +35,7 @@ const HeroSection = () => {
           alt="hero image"
           width={450}
           height={600}
-          objectFit="contain"
-          className="rounded-s-3xl rounded-br-3xl"
+          className="rounded-s-3xl rounded-br-3xl object-contain"
         />
       </div>
     </section>

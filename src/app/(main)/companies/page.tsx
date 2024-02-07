@@ -14,14 +14,14 @@ const CompaniesPage = () => {
   const [showFilter, setShowFilter] = useState<boolean>(false);
 
   return (
-    <main>
+    <main className="min-h-[calc(100vh-452px)]">
       <TopSection
         title={['Find your', 'dream company']}
         description="Find the dream company you dream work for"
       >
         <FormSearch />
       </TopSection>
-      <section className="max-w-screen w-full mx-auto container flex items-start justify-center gap-10 py-16">
+      <section className="container flex items-start justify-center gap-10 py-12 sm:py-16">
         <FormFilter
           title="Categories"
           listFilter={[1, 2, 3, 4, 5, 6, 7, 8]}
@@ -31,7 +31,9 @@ const CompaniesPage = () => {
         <div className="w-full">
           <div className="mb-8 flex items-center justify-between">
             <div>
-              <h3 className="text-3xl font-semibold">All Companies</h3>
+              <h3 className="text-2xl sm:text-3xl font-semibold">
+                All Companies
+              </h3>
               <p className="text-muted-foreground">Showing 10 Result</p>
             </div>
             <div className="block lg:hidden">
