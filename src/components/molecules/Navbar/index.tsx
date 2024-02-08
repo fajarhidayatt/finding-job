@@ -1,21 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
-import clsx from 'clsx';
+import Image from 'next/image';
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { useSession } from 'next-auth/react';
 import { AlignJustify } from 'lucide-react';
+import { ProfileAccount } from '@/components/atoms';
 
 const Navbar = () => {
   const [toggle, setToggle] = useState<boolean>(false);
-
-  const linkContainer = clsx({
-    'w-full md:max-h-screen flex flex-col md:flex-row md:items-center gap-3 overflow-hidden transition-max-height duration-500 md:ml-10':
-      true,
-    'max-h-screen': toggle,
-    'max-h-0': !toggle,
-  });
+  const { data: session } = useSession();
 
   return (
     <nav className="max-w-screen-xl w-full mx-auto container py-3 bg-white">
@@ -38,7 +34,12 @@ const Navbar = () => {
             <AlignJustify />
           </Button>
         </div>
-        <div className={linkContainer}>
+        <div
+          className={cn(
+            'w-full max-h-0 md:max-h-screen flex flex-col md:flex-row md:items-center gap-3 overflow-hidden transition-max-height duration-500 md:ml-10',
+            toggle && 'max-h-screen'
+          )}
+        >
           <ul className="w-full flex flex-col md:flex-row gap-3 mt-5 md:mt-0">
             <li>
               <Link
@@ -57,19 +58,23 @@ const Navbar = () => {
               </Link>
             </li>
           </ul>
-          <div className="flex flex-col md:flex-row md:items-center gap-3">
-            <Link href="/signin">
-              <Button
-                variant="outline"
-                className="w-full border-primary text-primary hover:bg-primary/10 hover:text-primary"
-              >
-                Sign In
-              </Button>
-            </Link>
-            <Link href="/signup">
-              <Button className="w-full">Sign Up</Button>
-            </Link>
-          </div>
+          {session ? (
+            <ProfileAccount account={session.user} />
+          ) : (
+            <div className="flex flex-col md:flex-row md:items-center gap-3">
+              <Link href="/signin">
+                <Button
+                  variant="outline"
+                  className="w-full border-primary text-primary hover:bg-primary/10 hover:text-primary"
+                >
+                  Sign In
+                </Button>
+              </Link>
+              <Link href="/signup">
+                <Button className="w-full">Sign Up</Button>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </nav>
