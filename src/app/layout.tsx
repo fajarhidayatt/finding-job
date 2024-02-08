@@ -3,6 +3,7 @@ import '@/styles/globals.css';
 import { Metadata } from 'next';
 import { Epilogue } from 'next/font/google';
 import { Toaster } from '@/components/ui/toaster';
+import NextAuthProvider from '@/providers/NextAuthProvider';
 
 const epilogue = Epilogue({ subsets: ['latin'] });
 
@@ -20,11 +21,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={epilogue.className}>
-        {children}
-        <Toaster />
-      </body>
-    </html>
+    <NextAuthProvider>
+      <html lang="en">
+        <body className={epilogue.className}>
+          {children}
+          <Toaster />
+        </body>
+      </html>
+    </NextAuthProvider>
   );
 }
