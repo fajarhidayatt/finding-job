@@ -30,3 +30,5 @@ export const ACCEPTED_IMAGE_TYPES = [
   'image/png',
   'image/webp',
 ] as const;
+
+export const ROLE_OPTIONS: EnumValues = ['JOBSEEKER', 'COMPANY'];

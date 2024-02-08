@@ -3,6 +3,8 @@ import { Breadcrumb, BreadcrumbItem } from './Breadcrumb';
 import InputSkill from './Input/InputSkill';
 import InputCKEditor from './Input/InputCKEditor';
 import InputBenefit from './Input/InputBenefit';
+import InputText from './Input/InputText';
+import InputSelect from './Input/InputSelect';
 import InputWrapper from './Input/InputWrapper';
 
 import UploadImage from './UploadFIle/UploadImage';
@@ -13,6 +15,8 @@ export {
   InputSkill,
   InputCKEditor,
   InputBenefit,
+  InputText,
+  InputSelect,
   InputWrapper,
   UploadImage,
 };
