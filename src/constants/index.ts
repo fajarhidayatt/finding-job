@@ -1,5 +1,10 @@
 import { EnumValues } from 'zod';
 
+export const GUEST_PAGES = /^\/sign*/;
+export const JOBSEEKER_PAGES = /^\/profile*/;
+export const COMPANY_PAGES = /^\/dashboard\/company*/;
+export const ADMIN_PAGES = /^\/dashboard\/admin*/;
+
 export const JOB_TYPES: EnumValues = [
   'Full-Time',
   'Part-Time',
