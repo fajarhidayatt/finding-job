@@ -18,12 +18,12 @@ enum AccountRole {
 
 model Account {
     id              String @id @default(uuid())
-    usernmae        String
+    username        String
     email           String @unique
     password        String
     role            AccountRole
-    Jobseeker       Jobseeker?
-    Company         Company?
+    jobseeker       Jobseeker?
+    company         Company?
 }
 
 model Company {
@@ -31,7 +31,7 @@ model Company {
     name            String
     logo            String?
     overview        String?
-    industry        String[]
+    industry        String?
     website         String?
     location        String?
     employee        String?
@@ -43,7 +43,7 @@ model Company {
 }
 
 model Jobseeker {
-    id              String @id @default(cuid())
+    id              String @id @default(uuid())
     fullName        String
     photo           String?
     phoneNumber     String? @db.VarChar(15)
@@ -89,7 +89,7 @@ model Job {
     salaryTo        String
     requiredSkills  String[]
     benefits        Json
-    status          Status @default(APPLIED)
+    status          Status? @default(APPLIED)
     companyId       String
     company         Company @relation(fields: [companyId], references: [id])
     categoryId      String

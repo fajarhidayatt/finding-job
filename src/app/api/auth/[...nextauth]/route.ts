@@ -19,24 +19,49 @@ export const authOptions: NextAuthOptions = {
           type: 'password',
         },
       },
-      async authorize(credentials, req) {
-        const user = await prisma.account.findFirst({
+      async authorize(credentials) {
+        const account = await prisma.account.findFirst({
           where: {
             email: credentials?.email,
           },
+          include: {
+            jobseeker: true,
+            company: true,
+          },
         });
 
-        if (!user) {
-          return null;
-        }
+        if (account) {
+          const isMatch = await bcrypt.compare(
+            credentials?.password!!,
+            account.password
+          );
 
-        const isMatch = await bcrypt.compare(
-          credentials?.password!!,
-          user.password
-        );
+          if (isMatch) {
+            if (account.jobseeker !== null) {
+              return {
+                id: account.id,
+                email: account.email,
+                name: account.username,
+                role: account.role,
+                image: account.jobseeker.photo,
+              };
+            } else if (account.company !== null) {
+              return {
+                id: account.id,
+                email: account.email,
+                name: account.username,
+                role: account.role,
+                image: account.company.logo,
+              };
+            }
 
-        if (isMatch) {
-          return user;
+            return {
+              id: account.id,
+              email: account.email,
+              name: account.username,
+              role: account.role,
+            };
+          }
         }
 
         return null;
@@ -48,15 +73,17 @@ export const authOptions: NextAuthOptions = {
     newUser: '/signup',
   },
   callbacks: {
-    jwt({ token, account, user }) {
-      if (account) {
+    jwt({ token, user }) {
+      if (user) {
         token.id = user.id;
+        token.role = user.role;
       }
 
       return token;
     },
-    async session({ session, token, user }) {
+    async session({ session, token }) {
       session.user.id = token.id;
+      session.user.role = token.role;
 
       return session;
     },

@@ -30,6 +30,22 @@ export async function POST(request: NextRequest) {
     },
   });
 
+  if (newAccount.role === 'COMPANY') {
+    await prisma.company.create({
+      data: {
+        name: newAccount.username,
+        accountId: newAccount.id,
+      },
+    });
+  } else if (newAccount.role === 'JOBSEEKER') {
+    await prisma.jobseeker.create({
+      data: {
+        fullName: newAccount.username,
+        accountId: newAccount.id,
+      },
+    });
+  }
+
   return NextResponse.json({
     status: 'success',
     message: 'Create account successfully',

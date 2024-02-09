@@ -33,6 +33,10 @@ const FormSignup = () => {
 
   const onSubmit = async (val: z.infer<typeof formSignupSchema>) => {
     try {
+      if (val.role !== 'JOBSEEKER' && val.role !== 'COMPANY') {
+        throw new Error('Something worng, please try again!');
+      }
+
       const post = await fetch('/api/v1/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
