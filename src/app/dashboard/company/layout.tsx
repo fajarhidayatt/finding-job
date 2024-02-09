@@ -3,8 +3,7 @@ import { Sidebar } from '@/components/molecules';
 
 export const metadata: Metadata = {
   title: {
-    template: 'Dashboard | %s',
-    default: 'Dashboard | Company',
+    absolute: 'Dashboard | Company',
   },
 };
 

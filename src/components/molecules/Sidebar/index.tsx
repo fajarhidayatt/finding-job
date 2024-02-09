@@ -1,17 +1,18 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
+import { signOut } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import {
-  Building,
-  ClipboardList,
   Home,
-  LogOut,
   Menu,
-  Settings,
   Users,
+  LogOut,
+  Building,
+  Settings,
+  ClipboardList,
 } from 'lucide-react';
-import Link from 'next/link';
 
 const Sidebar = () => {
   const [toggle, setToggle] = useState<boolean>(false);
@@ -73,11 +74,16 @@ const Sidebar = () => {
             <span>Settings</span>
           </Link>
         </li>
-        <li className="p-3 text-sm rounded-md bg-red-500/10 hover:bg-red-500/25 text-red-700">
-          <Link href="/" className="flex items-center gap-5">
+        <li className="">
+          <Button
+            type="button"
+            variant="ghost"
+            className="w-full flex items-center justify-start gap-5 p-3 text-sm bg-red-500/10 hover:bg-red-500/25 text-red-700 hover:text-red-700"
+            onClick={() => signOut()}
+          >
             <LogOut className="w-5 h-5" />
             <span>Logout</span>
-          </Link>
+          </Button>
         </li>
       </ul>
     </aside>

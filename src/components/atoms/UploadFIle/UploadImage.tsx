@@ -1,22 +1,36 @@
 'use client';
 
-import { ChangeEvent, useState } from 'react';
-import { Upload, Image as ImageIcon } from 'lucide-react';
-import { FormField, FormItem, FormMessage } from '@/components/ui/form';
 import Image from 'next/image';
+import { supabaseGetFile } from '@/lib/supabase';
+import { Upload, Image as ImageIcon } from 'lucide-react';
+import { ChangeEvent, useEffect, useState } from 'react';
+import { FormField, FormItem, FormMessage } from '@/components/ui/form';
+import { FieldValues, Path, UseFormReturn } from 'react-hook-form';
 
-interface UploadImageProps {
-  form: any; // TODO: PR
-  name: string;
+interface UploadImageProps<T extends FieldValues> {
+  form: UseFormReturn<T>;
+  name: Path<T>;
+  defaultValue: string;
 }
 
-const UploadImage = ({ form, name }: UploadImageProps) => {
+const UploadImage = <T extends FieldValues>({
+  form,
+  name,
+  defaultValue,
+}: UploadImageProps<T>) => {
   const [previewImg, setPreviewImg] = useState('');
+
+  useEffect(() => {
+    if (defaultValue) {
+      const { url } = supabaseGetFile(defaultValue, 'images');
+      setPreviewImg(url);
+    }
+  }, [defaultValue]);
 
   const handleUpload = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setPreviewImg(URL.createObjectURL(e.target.files[0]));
-      form.setValue(name, e.target.files[0]);
+      form.setValue(name, e.target.files[0] as any);
     }
   };
 
@@ -44,6 +58,9 @@ const UploadImage = ({ form, name }: UploadImageProps) => {
         >
           <Upload />
           <span className="text-sm font-medium mt-1">Upload logo here</span>
+          <span className="text-xs">
+            max <strong>500kb</strong>
+          </span>
         </label>
         <input
           id="imageUpload"

@@ -1,8 +1,24 @@
+import { TCompany } from '@/types';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { getServerSession } from 'next-auth';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
+import prisma from '@/lib/prisma';
 import TabOverview from './_profilePartials/TabOverview';
 import TabSocialLinks from './_profilePartials/TabSocialLinks';
 
-const CompanyProfilePage = () => {
+const CompanyProfilePage = async () => {
+  const session = await getServerSession(authOptions);
+
+  const companyOverview = (await prisma.company.findFirst({
+    where: {
+      id: session?.user.id,
+    },
+    include: {
+      socialMedia: true,
+    },
+  })) as TCompany;
+
   return (
     <div className="py-5">
       <h1 className="text-xl font-semibold">Company Profile</h1>
@@ -13,10 +29,10 @@ const CompanyProfilePage = () => {
             <TabsTrigger value="socialLinks">Social Links</TabsTrigger>
           </TabsList>
           <TabsContent value="overview">
-            <TabOverview />
+            <TabOverview company={companyOverview} />
           </TabsContent>
           <TabsContent value="socialLinks">
-            <TabSocialLinks />
+            <TabSocialLinks links={companyOverview.socialMedia} />
           </TabsContent>
         </Tabs>
       </div>

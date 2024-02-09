@@ -1,121 +1,71 @@
 'use client';
 
-import { InputWrapper } from '@/components/atoms';
-import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { formCompanySocialShema } from '@/lib/validations';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { toast } from '@/components/ui/use-toast';
+import { TLink } from '@/types';
+import { Trash } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
+import { InputSocialLink, InputWrapper } from '@/components/atoms';
 
-const TabSocialLinks = () => {
-  const form = useForm<z.infer<typeof formCompanySocialShema>>({
-    resolver: zodResolver(formCompanySocialShema),
-  });
+interface TabSocialLinksProps {
+  links?: TLink[];
+}
 
-  function onSubmit(values: z.infer<typeof formCompanySocialShema>) {
-    console.log(values);
-  }
+const TabSocialLinks = ({ links }: TabSocialLinksProps) => {
+  const router = useRouter();
+
+  const handleDeleteLink = async (linkId: string) => {
+    try {
+      toast({
+        title: 'Proccess',
+        description: 'Loading...',
+      });
+
+      await fetch(`/api/v1/links/${linkId}`, {
+        method: 'DELETE',
+      });
+
+      toast({
+        title: 'Success',
+        description: 'Success delete link',
+      });
+      router.refresh();
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Something wrong, please try again!',
+      });
+    }
+  };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <InputWrapper
-          title="Social Media"
-          description="Add elsewhere links to your company profile."
-        >
-          <div className="space-y-5">
-            {/* FACEBOOK */}
-            <FormField
-              control={form.control}
-              name="facebook"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Facebook</FormLabel>
-                  <FormControl>
-                    <Input placeholder="https://facebook.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* INSTAGRAM */}
-            <FormField
-              control={form.control}
-              name="instagram"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Instagram</FormLabel>
-                  <FormControl>
-                    <Input placeholder="https://instagram.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* TWITTER */}
-            <FormField
-              control={form.control}
-              name="twitter"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Twitter</FormLabel>
-                  <FormControl>
-                    <Input placeholder="https://twitter.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* LINKEDIN */}
-            <FormField
-              control={form.control}
-              name="linkedin"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>LinkedIn</FormLabel>
-                  <FormControl>
-                    <Input placeholder="https://linkedin.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* YOUTUBE */}
-            <FormField
-              control={form.control}
-              name="youtube"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Youtube</FormLabel>
-                  <FormControl>
-                    <Input placeholder="https://youtube.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        </InputWrapper>
-
-        {/* BUTTON */}
-        <div className="flex justify-end">
-          <Button size="lg">Save Changes</Button>
-        </div>
-      </form>
-    </Form>
+    <InputWrapper
+      title="Social Links"
+      description="Add elsewhere links to your company profile."
+    >
+      <InputSocialLink />
+      <div className="space-y-5 mt-10">
+        {links &&
+          links?.map((link) => (
+            <div key={link.id}>
+              <p>{link.name}</p>
+              <div className="flex items-center gap-5 mt-1.5">
+                <Input value={link.link} readOnly />
+                <Button
+                  size="icon"
+                  variant="destructive"
+                  className="w-11 h-10"
+                  onClick={() => handleDeleteLink(link.id!!)}
+                >
+                  <Trash className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+          ))}
+      </div>
+    </InputWrapper>
   );
 };
 export default TabSocialLinks;
