@@ -39,7 +39,8 @@ export const authOptions: NextAuthOptions = {
           if (isMatch) {
             if (account.jobseeker !== null) {
               return {
-                id: account.id,
+                id: account.jobseeker.id,
+                accountId: account.id,
                 email: account.email,
                 name: account.username,
                 role: account.role,
@@ -47,7 +48,8 @@ export const authOptions: NextAuthOptions = {
               };
             } else if (account.company !== null) {
               return {
-                id: account.id,
+                id: account.company.id,
+                accountId: account.id,
                 email: account.email,
                 name: account.username,
                 role: account.role,
@@ -57,9 +59,11 @@ export const authOptions: NextAuthOptions = {
 
             return {
               id: account.id,
+              accountId: account.id,
               email: account.email,
               name: account.username,
               role: account.role,
+              image: null,
             };
           }
         }
@@ -69,14 +73,16 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   pages: {
-    signIn: '/signin',
-    newUser: '/signup',
+    signIn: '/auth/signin',
+    newUser: '/auth/signup',
+    signOut: '/',
   },
   callbacks: {
     jwt({ token, user }) {
       if (user) {
         token.id = user.id;
         token.role = user.role;
+        token.accountId = user.accountId;
       }
 
       return token;
@@ -84,6 +90,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       session.user.id = token.id;
       session.user.role = token.role;
+      session.user.accountId = token.accountId;
 
       return session;
     },
