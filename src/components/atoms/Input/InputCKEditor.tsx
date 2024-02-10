@@ -2,14 +2,19 @@
 
 import { useEffect, useRef } from 'react';
 import { FormField, FormItem, FormMessage } from '@/components/ui/form';
+import { FieldValues, Path, UseFormReturn } from 'react-hook-form';
 
-interface InputCKEditorProps {
-  form: any; // TODO: PR
-  name: string;
+interface InputCKEditorProps<T extends FieldValues> {
+  form: UseFormReturn<T>;
+  name: Path<T>;
   editorLoaded?: boolean;
 }
 
-const InputCKEditor = ({ form, name, editorLoaded }: InputCKEditorProps) => {
+const InputCKEditor = <T extends FieldValues>({
+  form,
+  name,
+  editorLoaded,
+}: InputCKEditorProps<T>) => {
   const editorRef = useRef<any>(); // TODO: PR
   const { CKEditor, ClassicEditor } = editorRef.current || {};
 

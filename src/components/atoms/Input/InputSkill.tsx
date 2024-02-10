@@ -1,24 +1,29 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Plus, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { FieldValues, Path, UseFormReturn } from 'react-hook-form';
 import {
   FormControl,
   FormField,
   FormItem,
   FormMessage,
 } from '@/components/ui/form';
-import { Plus, X } from 'lucide-react';
 
-interface InputSkillProps {
-  form: any; // TODO: PR
-  name: string;
-  label: string;
+interface InputSkillProps<T extends FieldValues> {
+  form: UseFormReturn<T>;
+  name: Path<T>;
+  label?: string;
 }
 
-const InputSkill = ({ form, name, label }: InputSkillProps) => {
+const InputSkill = <T extends FieldValues>({
+  form,
+  name,
+  label,
+}: InputSkillProps<T>) => {
   const [isHide, setHide] = useState<boolean>(false);
   const [skills, setSkills] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState<string>('');
@@ -38,7 +43,7 @@ const InputSkill = ({ form, name, label }: InputSkillProps) => {
 
     setSkills(newSkills);
     setInputValue('');
-    form.setValue(name, newSkills);
+    form.setValue(name, newSkills as any);
   };
 
   const handleDeleteSkill = (item: string) => {
@@ -47,7 +52,7 @@ const InputSkill = ({ form, name, label }: InputSkillProps) => {
     );
 
     setSkills(updateSkills);
-    form.setValue(name, skills);
+    form.setValue(name, skills as any);
   };
 
   return (
@@ -68,7 +73,7 @@ const InputSkill = ({ form, name, label }: InputSkillProps) => {
                 {label}
               </Button>
 
-              {/* input */}
+              {/* input skill */}
               {isHide ? (
                 <div className="mt-4 flex gap-4">
                   <Input

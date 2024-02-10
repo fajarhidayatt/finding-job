@@ -21,6 +21,7 @@ interface InputDateProps<T extends FieldValues> {
   name: Path<T>;
   label?: string;
   placeholder?: string;
+  disabled?: Date;
 }
 
 const InputDate = <T extends FieldValues>({
@@ -28,6 +29,7 @@ const InputDate = <T extends FieldValues>({
   name,
   label,
   placeholder,
+  disabled,
 }: InputDateProps<T>) => {
   return (
     <FormField
@@ -54,9 +56,7 @@ const InputDate = <T extends FieldValues>({
                 mode="single"
                 selected={field.value}
                 onSelect={field.onChange}
-                disabled={(date) =>
-                  date > new Date() || date < new Date('1900-01-01')
-                }
+                disabled={disabled}
               />
             </PopoverContent>
           </Popover>

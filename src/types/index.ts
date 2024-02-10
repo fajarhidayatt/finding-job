@@ -5,6 +5,11 @@ export type TBenefit = {
 
 export type TBucket = 'images' | 'resumes';
 
+export type TCategory = {
+  id: string;
+  name: string;
+};
+
 export type TLink = {
   id?: string;
   name: string;

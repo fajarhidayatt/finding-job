@@ -8,7 +8,6 @@ import {
 import {
   Select,
   SelectContent,
-  SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
@@ -19,17 +18,17 @@ type TOption = Record<string, string>;
 interface InputSelectProps<T extends FieldValues> {
   name: Path<T>;
   control: Control<T>;
-  options: TOption[];
   label?: string;
   placeholder?: string;
+  children: React.ReactNode;
 }
 
 const InputSelect = <T extends FieldValues>({
   name,
   control,
-  options,
   label,
   placeholder,
+  children,
 }: InputSelectProps<T>) => {
   return (
     <FormField
@@ -44,13 +43,7 @@ const InputSelect = <T extends FieldValues>({
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>
-            <SelectContent>
-              {options.map((option: TOption) => (
-                <SelectItem key={option.key} value={option.value}>
-                  {option.value}
-                </SelectItem>
-              ))}
-            </SelectContent>
+            <SelectContent>{children}</SelectContent>
           </Select>
           <FormMessage />
         </FormItem>
@@ -60,3 +53,11 @@ const InputSelect = <T extends FieldValues>({
 };
 
 export default InputSelect;
+
+// {
+//   options.map((option: TOption) => (
+//     <SelectItem key={option.key} value={option.value}>
+//       {option.value}
+//     </SelectItem>
+//   ));
+// }
