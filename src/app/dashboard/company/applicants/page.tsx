@@ -1,6 +1,11 @@
-import { MoreVertical } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import prisma from '@/lib/prisma';
 import { Badge } from '@/components/ui/badge';
+import { format } from 'date-fns';
+import { Button } from '@/components/ui/button';
+import { TApplicant } from '@/types';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { MoreVertical } from 'lucide-react';
+import { getServerSession } from 'next-auth';
 import {
   Table,
   TableBody,
@@ -17,7 +22,16 @@ const APPLICANTS_COLUMNS: string[] = [
   'Status',
 ] as const;
 
-const AllApplicants = () => {
+const AllApplicants = async () => {
+  const session = await getServerSession(authOptions);
+  const applicants = (await prisma.applicant.findMany({
+    where: {
+      job: {
+        companyId: session?.user.id,
+      },
+    },
+  })) as TApplicant[];
+
   return (
     <div className="my-5">
       <h1 className="text-xl font-semibold">All Applicants</h1>
@@ -32,25 +46,31 @@ const AllApplicants = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {[1, 2, 3].map((item: number) => (
-              <TableRow key={item}>
-                <TableCell>{'Jhon Smith'}</TableCell>
-                <TableCell>{'Front-end'}</TableCell>
-                <TableCell>{'18 Feb, 2023'}</TableCell>
-                <TableCell>
-                  <Badge variant="outline">{'Status'}</Badge>
-                </TableCell>
-                <TableCell>
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    className="cursor-pointer"
-                  >
-                    <MoreVertical />
-                  </Button>
-                </TableCell>
+            {applicants?.length > 0 ? (
+              applicants.map((applicant: TApplicant) => (
+                <TableRow key={applicant.id}>
+                  <TableCell>{applicant.jobseeker?.fullName}</TableCell>
+                  <TableCell>{applicant.job?.role}</TableCell>
+                  <TableCell>{format(applicant.applyDate, 'PP')}</TableCell>
+                  <TableCell>
+                    <Badge variant="outline">{applicant.status}</Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      className="cursor-pointer"
+                    >
+                      <MoreVertical />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow className="text-center">
+                <TableCell colSpan={5}>No one has applied yet</TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </div>
