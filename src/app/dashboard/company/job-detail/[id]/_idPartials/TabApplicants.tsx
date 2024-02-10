@@ -1,5 +1,10 @@
+import prisma from '@/lib/prisma';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { format } from 'date-fns';
+import { TApplicant } from '@/types';
+import { MoreVertical } from 'lucide-react';
+import { APPLICANT_COLUMNS } from '@/constants';
 import {
   Table,
   TableBody,
@@ -8,11 +13,21 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { MoreVertical } from 'lucide-react';
 
-const APPLICANT_COLUMNS: string[] = ['Name', 'Apply Date', 'Status'] as const;
+interface TabApplicantsProps {
+  jobId: string;
+}
 
-const TabApplicants = () => {
+const TabApplicants = async ({ jobId }: TabApplicantsProps) => {
+  const applicants = (await prisma.applicant.findMany({
+    where: {
+      jobId,
+    },
+    include: {
+      jobseeker: true,
+    },
+  })) as TApplicant[];
+
   return (
     <Table>
       <TableHeader>
@@ -24,20 +39,26 @@ const TabApplicants = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {[1, 2, 3].map((item: number) => (
-          <TableRow key={item}>
-            <TableCell>{'Jhon Smith'}</TableCell>
-            <TableCell>{'Jan 12, 2023'}</TableCell>
-            <TableCell>
-              <Badge>proccess</Badge>
-            </TableCell>
-            <TableCell>
-              <Button size="icon" variant="outline">
-                <MoreVertical />
-              </Button>
-            </TableCell>
+        {applicants?.length > 0 ? (
+          applicants.map((applicant: TApplicant) => (
+            <TableRow key={applicant.id}>
+              <TableCell>{applicant.jobseeker?.fullName}</TableCell>
+              <TableCell>{format(applicant.applyDate, 'PP')}</TableCell>
+              <TableCell>
+                <Badge>{applicant.status}</Badge>
+              </TableCell>
+              <TableCell>
+                <Button size="icon" variant="outline">
+                  <MoreVertical />
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))
+        ) : (
+          <TableRow className="text-center">
+            <TableCell colSpan={4}>No one has applied yet</TableCell>
           </TableRow>
-        ))}
+        )}
       </TableBody>
     </Table>
   );

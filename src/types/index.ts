@@ -1,5 +1,12 @@
 export type TBucket = 'images' | 'resumes';
 
+export type TAccount = {
+  id: string;
+  username: string;
+  email: string;
+  role: string;
+};
+
 export type TBenefit = {
   name: string;
   description: string;
@@ -16,6 +23,34 @@ export type TLink = {
   link: string;
   jobseekerId?: string;
   companyId?: string;
+};
+
+export type TJobseeker = {
+  id?: string;
+  fullName: string;
+  photo: string;
+  phoneNumber: string;
+  address: string;
+  summary: string;
+  accountId: string;
+  account?: TAccount;
+  educations?: [];
+  experiences?: [];
+  organizations?: [];
+  socialMedia?: TLink[];
+  applicants?: TApplicant[];
+};
+
+export type TApplicant = {
+  id?: string;
+  resume: string;
+  coverLetter?: string;
+  status: string;
+  applyDate: Date;
+  jobseekerId: string;
+  jobseeker?: TJobseeker;
+  jobId: string;
+  job?: TJob;
 };
 
 export type TJob = {
@@ -35,8 +70,8 @@ export type TJob = {
   companyId: string;
   company?: TCompany;
   categoryId: string;
-  category: TCategory;
-  applicants: [];
+  category?: TCategory;
+  applicants?: TApplicant[];
 };
 
 export type TCompany = {
@@ -49,7 +84,7 @@ export type TCompany = {
   location: string;
   employee: string;
   dateFounded: Date;
-  accountId?: string;
+  accountId: string;
   account?: [];
   socialMedia?: TLink[];
   jobs?: [];

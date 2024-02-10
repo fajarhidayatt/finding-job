@@ -96,7 +96,7 @@ export const LINK_OPTIONS = [
   'Youtube',
   'Dribbble',
   'GitHub',
-];
+] as const;
 
 export const JOB_LISTING_COLUMN: string[] = [
   'Roles',
@@ -106,4 +106,10 @@ export const JOB_LISTING_COLUMN: string[] = [
   'Job Type',
   'Applicants',
   'Needs',
-];
+] as const;
+
+export const APPLICANT_COLUMNS: string[] = [
+  'Name',
+  'Apply Date',
+  'Status',
+] as const;
