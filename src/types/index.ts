@@ -1,9 +1,9 @@
+export type TBucket = 'images' | 'resumes';
+
 export type TBenefit = {
   name: string;
   description: string;
 };
-
-export type TBucket = 'images' | 'resumes';
 
 export type TCategory = {
   id: string;
@@ -16,6 +16,27 @@ export type TLink = {
   link: string;
   jobseekerId?: string;
   companyId?: string;
+};
+
+export type TJob = {
+  id?: string;
+  role: string;
+  description: string;
+  datePosted: Date;
+  dueDate: Date;
+  jobType: string;
+  totalApplicants: number;
+  totalNeeds: number;
+  salaryFrom: string;
+  salaryTo: string;
+  requiredSkills: string[];
+  benefits: TBenefit[];
+  status: string;
+  companyId: string;
+  company?: TCompany;
+  categoryId: string;
+  category: TCategory;
+  applicants: [];
 };
 
 export type TCompany = {

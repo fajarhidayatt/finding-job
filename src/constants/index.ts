@@ -97,3 +97,13 @@ export const LINK_OPTIONS = [
   'Dribbble',
   'GitHub',
 ];
+
+export const JOB_LISTING_COLUMN: string[] = [
+  'Roles',
+  'Status',
+  'Date Posted',
+  'Due Date',
+  'Job Type',
+  'Applicants',
+  'Needs',
+];
