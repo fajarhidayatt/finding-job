@@ -1,53 +1,67 @@
-import { Badge } from '@/components/ui/badge';
-import { Building, Flame, MapPin, UsersRound } from 'lucide-react';
 import Image from 'next/image';
+import { Badge } from '@/components/ui/badge';
+import { format } from 'date-fns';
+import { TCompany } from '@/types';
+import { getImageSrc } from '@/lib/utils';
+import { Building, Flame, MapPin, UsersRound } from 'lucide-react';
 import InfoItem from './InfoItem';
 
-const InfoCompany = () => {
+interface InfoCompanyProps extends Partial<TCompany> {
+  jobTotal: number;
+}
+
+const InfoCompany = ({
+  logo,
+  dateFounded,
+  employee,
+  industry,
+  jobTotal,
+  location,
+  name,
+  website,
+}: InfoCompanyProps) => {
   return (
     <div className="w-full sm:w-10/12 mx-auto mt-10">
       <div className="flex items-center gap-5">
         <div className="w-20 h-20 md:w-36 md:h-36">
           <Image
-            src="/dummies/dummy-company-1.png"
+            src={getImageSrc(logo, name!!)}
             alt="compnay profile"
             width={150}
             height={150}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover rounded-full"
           />
         </div>
-
         <div>
           <div className="flex items-center gap-4">
-            <h1 className="text-3xl sm:text-4xl font-semibold">Twitter</h1>
+            <h1 className="text-3xl sm:text-4xl font-semibold">{name}</h1>
             <Badge
               variant="outline"
               className="border-primary rounded-none text-primary py-1.5 px-2.5"
             >
-              10 Jobs
+              {jobTotal} Jobs
             </Badge>
           </div>
           <a
-            href="https://google.com"
+            href={website}
             target="_blank"
             className="font-semibold text-primary block mt-2"
           >
-            www.google.com
+            {website}
           </a>
         </div>
       </div>
-
       <div className="mt-6 grid grid-cols-2 lg:grid-cols-4 gap-5">
-        <InfoItem title="Founded" description="12 Jan, 2020">
+        <InfoItem title="Founded" description={format(dateFounded!!, 'PP')}>
           <Flame className="w-6 h-6 text-primary" />
         </InfoItem>
-        <InfoItem title="Employees" description="10-15">
+        <InfoItem title="Employees" description={employee!!}>
           <UsersRound className="w-6 h-6 text-primary" />
         </InfoItem>
-        <InfoItem title="Location" description="Jakarta">
+        <InfoItem title="Location" description={location!!}>
           <MapPin className="w-6 h-6 text-primary" />
         </InfoItem>
-        <InfoItem title="Industry" description="Technology">
+        <InfoItem title="Industry" description={industry!!}>
           <Building className="w-6 h-6 text-primary" />
         </InfoItem>
       </div>
