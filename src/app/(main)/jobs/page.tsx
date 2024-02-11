@@ -1,17 +1,32 @@
 'use client';
 
-import { useState } from 'react';
+import { TJob } from '@/types';
 import { Button } from '@/components/ui/button';
+import { Filter } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   TopSection,
   FormFilter,
   FormSearch,
   JobCard,
 } from '@/components/molecules';
-import { Filter } from 'lucide-react';
 
 const JobsPage = () => {
+  const [jobs, setJobs] = useState<TJob[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [showFilter, setShowFilter] = useState<boolean>(false);
+
+  const getDataJobs = useCallback(async () => {
+    const res = await fetch('/api/jobs');
+    const data = await res.json();
+
+    setJobs(data.data);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    getDataJobs();
+  }, [getDataJobs]);
 
   return (
     <main className="min-h-[calc(100vh-452px)]">
@@ -21,7 +36,6 @@ const JobsPage = () => {
       >
         <FormSearch />
       </TopSection>
-
       <section className="container flex items-start justify-center gap-10 py-12 sm:py-16">
         <FormFilter
           title="Categories"
@@ -29,13 +43,13 @@ const JobsPage = () => {
           showFilter={showFilter}
           handleShowFilter={() => setShowFilter(false)}
         />
-
-        {/* List */}
         <div className="w-full">
           <div className="mb-8 flex items-center justify-between">
             <div>
               <h3 className="text-2xl sm:text-3xl font-semibold">All Jobs</h3>
-              <p className="text-muted-foreground">Showing 10 Result</p>
+              <p className="text-muted-foreground">
+                Showing {jobs.length} Result
+              </p>
             </div>
             <div className="block lg:hidden">
               <Button onClick={() => setShowFilter(true)}>
@@ -45,8 +59,20 @@ const JobsPage = () => {
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {[1, 2, 3, 4, 5, 6].map((item: number) => (
-              <JobCard key={item} />
+            {loading && 'Loading...'}
+            {jobs.map((job: TJob) => (
+              <JobCard
+                key={job.id}
+                id={job.id}
+                role={job.role}
+                jobType={job.jobType}
+                jobCategory={job.category?.name!!}
+                description={job.description}
+                requiredSkills={job.requiredSkills}
+                companyName={job.company?.name!!}
+                companyLogo={job.company?.logo!!}
+                companyLocation={job.company?.location!!}
+              />
             ))}
           </div>
         </div>

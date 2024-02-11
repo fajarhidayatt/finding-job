@@ -1,34 +1,43 @@
+import Link from 'next/link';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
-import Link from 'next/link';
+import { TCompany } from '@/types';
+import { getImageSrc } from '@/lib/utils';
 
-const CompanyCard = () => {
+interface CompanyCard {
+  company: TCompany & {
+    _count?: {
+      jobs?: number;
+    };
+  };
+}
+
+const CompanyCard = ({ company }: CompanyCard) => {
   return (
-    <Link href="/">
+    <Link href={`/companies/${company.id}`}>
       <div className="border p-6">
         <div className="flex items-start justify-between">
           <Image
-            src="/dummies/dummy-company-2.png"
-            alt="company profile"
+            src={getImageSrc(company.logo, company.name)}
+            alt="Company logo"
             width={66}
             height={66}
-            objectFit="cover"
+            className="object-cover rounded-full"
           />
-          <Badge className="rounded-sm">1 Jobs</Badge>
+          <Badge className="rounded-sm">{company._count?.jobs} Jobs</Badge>
         </div>
         <div className="my-4">
-          <div className="text-lg font-semibold mb-2">Tokopedia</div>
+          <div className="text-lg font-semibold mb-2">{company.name}</div>
           <div
             className="text-sm text-muted-foreground line-clamp-3"
             dangerouslySetInnerHTML={{
-              __html:
-                'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur perferendis inventore dolores, porro fuga esse.',
+              __html: company.overview,
             }}
           ></div>
         </div>
         <div className="flex items-center gap-2">
           <Badge variant="outline" className="py-1 px-2 rounded-none">
-            Technology
+            {company.industry}
           </Badge>
         </div>
       </div>

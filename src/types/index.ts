@@ -57,7 +57,7 @@ export type TApplicant = {
 };
 
 export type TJob = {
-  id?: string;
+  id: string;
   role: string;
   description: string;
   datePosted: Date;
