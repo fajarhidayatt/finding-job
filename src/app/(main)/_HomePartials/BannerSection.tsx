@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 
@@ -9,14 +10,16 @@ const BannerSection = () => {
           <div className="text-5xl font-semibold">
             Start posting <br /> jobs today
           </div>
-          <div className="mt-3 mb-6">Start posting job for free</div>
-          <Button
-            size="lg"
-            variant="secondary"
-            className="text-primary hover:text-white hover:bg-transparent border hover:border-white"
-          >
-            Sign Up Now
-          </Button>
+          <div className="mt-3 mb-6">Start posting job for company</div>
+          <Link href="/signup">
+            <Button
+              size="lg"
+              variant="secondary"
+              className="text-primary hover:text-white hover:bg-transparent border hover:border-white"
+            >
+              Sign Up Now
+            </Button>
+          </Link>
         </div>
         <div>
           <Image

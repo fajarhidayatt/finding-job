@@ -15,6 +15,9 @@ export type TBenefit = {
 export type TCategory = {
   id: string;
   name: string;
+  _count?: {
+    jobs?: number;
+  };
 };
 
 export type TLink = {
