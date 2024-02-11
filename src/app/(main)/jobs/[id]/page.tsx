@@ -1,65 +1,98 @@
-import { Breadcrumb, BreadcrumbItem } from '@/components/atoms';
-import { BenefitCard } from '@/components/molecules';
+import prisma from '@/lib/prisma';
+import { Badge } from '@/components/ui/badge';
+import { format } from 'date-fns';
 import { Separator } from '@/components/ui/separator';
-import InfoGroup from './_idPartials/InfoGroup';
-import InfoItem from './_idPartials/InfoItem';
+import { BenefitCard } from '@/components/molecules';
+import { getImageSrc } from '@/lib/utils';
+import { TBenefit, TJob } from '@/types';
 import InfoJob from './_idPartials/InfoJob';
 
-const DetailJob = () => {
-  const lorem =
-    'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Libero ratione quibusdam iure suscipit totam consectetur odio facere, adipisci perspiciatis aut.';
+interface DetailJobPageProps {
+  params: {
+    id: string;
+  };
+}
+
+const DetailJobPage = async ({ params }: DetailJobPageProps) => {
+  const { id } = params;
+
+  const job = (await prisma.job.findFirst({
+    where: {
+      id,
+    },
+    include: {
+      category: true,
+      company: true,
+    },
+  })) as TJob;
 
   return (
     <main className="min-h-[calc(100vh-452px)]">
       <section className="bg-slate-100 py-10">
         <div className="container">
-          <Breadcrumb>
-            <BreadcrumbItem url="/">Home</BreadcrumbItem>
-            <BreadcrumbItem url="/companies">Companies</BreadcrumbItem>
-            <BreadcrumbItem url={`/companies/${1}`}>Twitter</BreadcrumbItem>
-            <BreadcrumbItem url="/" isLast>
-              Front-end
-            </BreadcrumbItem>
-          </Breadcrumb>
-          <InfoJob />
+          <InfoJob
+            jobId={job.id!!}
+            role={job.role}
+            location={job.company?.location!!}
+            jobType={job.jobType}
+            logo={getImageSrc(job.company?.logo, job.company?.name!!)}
+          />
         </div>
       </section>
-
       <section className="container py-12 sm:py-16 grid grid-cols-12 gap-5 md:gap-10">
-        <div className="space-y-10 col-span-full md:col-span-7 lg:col-span-8 xl:col-span-9">
-          <InfoItem title="Description" description={lorem} />
-          <InfoItem title="Responsibilities" description={lorem} />
-          <InfoItem title="Who You Are" description={lorem} />
-          <InfoItem title="Nice To Haves" description={lorem} />
+        <div className="col-span-full md:col-span-7 lg:col-span-8">
+          <div className="text-2xl font-semibold mb-3">Description</div>
+          <div
+            className="text-muted-foreground"
+            dangerouslySetInnerHTML={{
+              __html: job.description,
+            }}
+          ></div>
         </div>
-
-        <div className="mt-5 col-span-full md:col-span-5 lg:col-span-4 xl:col-span-3">
+        <div className="mt-5 col-span-full md:col-span-5 lg:col-span-4">
           <div className="space-y-3">
-            <InfoItem
-              title="Apply Before"
-              description="12 Jan, 2023"
-              type="aside"
-            />
-            <InfoItem
-              title="Job Posted On"
-              description="12 Jan, 2023"
-              type="aside"
-            />
-            <InfoItem title="Job Type" description="Full-Time" type="aside" />
-            <InfoItem title="Salary" description="$500-$100 USD" type="aside" />
+            <div className="flex items-center justify-between">
+              <div className="text-gray-500">Apply Before</div>
+              <div className="font-semibold">{format(job.dueDate, 'PP')}</div>
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="text-gray-500">Job Posted On</div>
+              <div className="font-semibold">
+                {format(job.datePosted, 'PP')}
+              </div>
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="text-gray-500">Job Type</div>
+              <div className="font-semibold">{job.jobType}</div>
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="text-gray-500">Salary</div>
+              <div className="font-semibold">
+                {`${job.salaryFrom} - ${job.salaryTo}`}
+              </div>
+            </div>
           </div>
           <Separator className="my-5" />
-          <InfoGroup
-            title="Category"
-            items={['Programmer', 'Front-end', 'Web Dev']}
-          />
+          <div>
+            <div className="text-2xl font-semibold mb-3">Category</div>
+            <div className="w-max bg-primary py-1 px-2 rounded-sm">
+              <p className="text-sm text-white font-medium">
+                {job.category?.name}
+              </p>
+            </div>
+          </div>
           <Separator className="my-5" />
-          <InfoGroup
-            title="Required Skills"
-            items={['HTML', 'CSS', 'Javascript']}
-          />
+          <div>
+            <div className="text-2xl font-semibold mb-3">Required Skills</div>
+            <div className="flex flex-wrap gap-2">
+              {job.requiredSkills.map((skill: string, i: number) => (
+                <Badge key={i} variant="secondary">
+                  {skill}
+                </Badge>
+              ))}
+            </div>
+          </div>
         </div>
-
         <div className="col-span-full">
           <Separator />
           <div className="mb-7 mt-5">
@@ -69,11 +102,11 @@ const DetailJob = () => {
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-            {[1, 2, 3].map((item: number) => (
+            {job.benefits.map((benefit: TBenefit, index: number) => (
               <BenefitCard
-                key={item}
-                name="Push Career"
-                description="lorem ipsum dolor sit amet"
+                key={index}
+                name={benefit.name}
+                description={benefit.description}
               />
             ))}
           </div>
@@ -83,4 +116,4 @@ const DetailJob = () => {
   );
 };
 
-export default DetailJob;
+export default DetailJobPage;

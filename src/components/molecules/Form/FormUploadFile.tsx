@@ -1,50 +1,48 @@
 'use client';
 
+import { ChangeEvent, useState } from 'react';
+import { FieldValues, Path, UseFormReturn } from 'react-hook-form';
 import { FormField, FormItem, FormMessage } from '@/components/ui/form';
-import { ChangeEvent, useRef, useState } from 'react';
 
-interface FormUploadFileProps {
-  form: any;
+interface FormUploadFileProps<T extends FieldValues> {
+  form: UseFormReturn<T>;
+  name: Path<T>;
 }
 
-const FormUploadFile = ({ form }: FormUploadFileProps) => {
-  const inputRef = useRef<HTMLInputElement>(null);
+const FormUploadFile = <T extends FieldValues>({
+  form,
+  name,
+}: FormUploadFileProps<T>) => {
   const [nameFile, SetNameFile] = useState<string>('Attach Resume / CV');
-
-  const handleSelectFile = () => {
-    inputRef.current?.click();
-  };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       SetNameFile(e.target.files[0].name);
-      form.setValue('resume', e.target.files[0]);
+      form.setValue(name, e.target.files[0] as any);
     }
   };
 
   return (
     <div className="flex items-center justify-between">
       <h5 className="font-semibold">Attach your resume</h5>
-      <div>
-        <div>
-          <div
-            onClick={handleSelectFile}
-            className="text-xs text-primary text-center font-semibold p-3 cursor-pointer border-2 border-dashed border-primary"
-          >
-            {nameFile}
-          </div>
-        </div>
+      <div className="space-y-2">
+        <label
+          htmlFor="file"
+          className="block text-xs text-primary text-center font-semibold p-3 cursor-pointer border-2 border-dashed border-primary"
+        >
+          {nameFile}
+        </label>
         <FormField
           control={form.control}
-          name="resume"
-          render={({ field }) => (
+          name={name}
+          render={() => (
             <FormItem>
               <FormMessage className="mt-2" />
             </FormItem>
           )}
         />
         <input
-          ref={inputRef}
+          id="file"
           type="file"
           className="hidden"
           accept="application/pdf"

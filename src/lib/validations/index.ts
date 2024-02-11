@@ -5,6 +5,7 @@ import formCompanySettingSchema from './company-setting-schema';
 import formSignupSchema from './signup-schema';
 import formSigninSchema from './signin-schema';
 import formLinkSchema from './link-schema';
+import formApplySchema from './apply-schema';
 
 export {
   formJobSchema,
@@ -14,4 +15,5 @@ export {
   formSignupSchema,
   formSigninSchema,
   formLinkSchema,
+  formApplySchema,
 };

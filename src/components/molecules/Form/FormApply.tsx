@@ -1,6 +1,18 @@
 'use client';
 
+import Image from 'next/image';
+import { z } from 'zod';
+import { toast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
+import { useForm } from 'react-hook-form';
+import { Textarea } from '@/components/ui/textarea';
+import { useState } from 'react';
+import { InputText } from '@/components/atoms';
+import { Separator } from '@/components/ui/separator';
+import { useSession } from 'next-auth/react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { formApplySchema } from '@/lib/validations';
+import { supabaseUploadFile } from '@/lib/supabase';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import {
   Form,
@@ -10,174 +22,171 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Separator } from '@/components/ui/separator';
-import { Textarea } from '@/components/ui/textarea';
 
-import Image from 'next/image';
+import FormUploadFile from './FormUploadFile';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { FormUploadFile } from '..';
+interface FormApplyProps {
+  jobId: string;
+  role: string;
+  location: string;
+  jobType: string;
+  logo: string;
+}
 
-const formSchema = z.object({
-  fullname: z.string().min(2).max(50),
-  email: z.string().min(2).max(50),
-  phoneNumber: z.string().min(2).max(50),
-  linkedIn: z.string().min(2).max(50),
-  portofolio: z.string().min(2).max(50),
-  coverLetter: z.string().min(2).max(50),
-  resume: z.any(),
-});
-
-const FormApply = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+const FormApply = ({
+  jobId,
+  role,
+  logo,
+  location,
+  jobType,
+}: FormApplyProps) => {
+  const { data: session } = useSession();
+  const [open, setOpen] = useState(false);
+  const form = useForm<z.infer<typeof formApplySchema>>({
+    resolver: zodResolver(formApplySchema),
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-  }
+  const onSubmit = async (val: z.infer<typeof formApplySchema>) => {
+    try {
+      const { filename } = await supabaseUploadFile(val.resume, 'resumes');
+
+      const data = {
+        resume: filename,
+        coverLetter: val.coverLetter ?? '',
+        jobseekerId: session?.user.id,
+        jobId: jobId,
+      };
+
+      const post = await fetch('/api/v1/jobseeker/apply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      const res = await post.json();
+
+      if (res.status !== 'Success') {
+        throw new Error(res.message);
+      }
+
+      toast({
+        title: 'Success',
+        description: res.message,
+      });
+      setOpen(!open);
+    } catch (error) {
+      if (error instanceof Error) {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: error.message,
+        });
+      }
+    }
+  };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button size="lg">Apply</Button>
       </DialogTrigger>
-      {/* "lg:max-w-screen-lg overflow-y-scroll max-h-screen"k */}
       <DialogContent className="max-w-screen-sm w-full max-h-screen overflow-y-scroll">
         <div className="flex items-center gap-4">
           <Image
-            src="/dummies/dummy-company-2.png"
+            src={logo}
             alt="company profile"
             width={60}
             height={60}
+            className="rounded-full"
           />
           <div>
-            <h5 className="text-lg font-semibold">FullStack Dev</h5>
-            <p className="text-gray-500">Jakarta . Full-Time</p>
+            <h5 className="text-lg font-semibold">{role}</h5>
+            <p className="text-gray-500">
+              {location} . {jobType}
+            </p>
           </div>
         </div>
-
         <Separator className="my-2.5" />
-
         <div>
           <h6 className="text-lg font-semibold">Submit your application</h6>
           <p className="text-sm text-gray-500 mt-2">
             The following is required and will only be shared with Nomad
           </p>
         </div>
-
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="grid grid-cols-2 gap-6">
-              <FormField
+              <InputText
                 control={form.control}
                 name="fullname"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Full Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter your full name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                type="text"
+                label="Full Name"
+                placeholder="Jhon Smith"
               />
-              <FormField
+              <InputText
                 control={form.control}
                 name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter your email" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                type="email"
+                label="Email"
+                placeholder="jhon@example.com"
               />
               <div className="col-span-full">
-                <FormField
+                <InputText
                   control={form.control}
                   name="phoneNumber"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Phone Number</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Enter your phone number"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  type="number"
+                  label="Phone Number"
+                  placeholder="08123456789"
                 />
               </div>
             </div>
-
             <Separator className="my-6" />
-
-            <h2 className="font-semibold mb-3">LINKS</h2>
-
-            <div className="grid grid-cols-2 gap-6">
-              <FormField
-                control={form.control}
-                name="linkedIn"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>LinkedIn URL</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Link to your linked URL" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="portofolio"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Portofolio URL</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Link to your portfolio URL"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="col-span-full">
-                <FormField
+            <div>
+              <h2 className="font-semibold mb-3">LINKS</h2>
+              <div className="grid grid-cols-2 gap-6">
+                <InputText
                   control={form.control}
-                  name="coverLetter"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Additional Information</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Add a cover letter or anything else you want to share"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  name="linkedIn"
+                  type="text"
+                  label="LinkedIn URL"
+                  placeholder="https://linkedin.com/in/jhon-smith"
                 />
+                <InputText
+                  control={form.control}
+                  name="portofolio"
+                  type="text"
+                  label="Portofolio URL"
+                  placeholder="https://jhonsmith.com"
+                />
+                <div className="col-span-full">
+                  <FormField
+                    control={form.control}
+                    name="coverLetter"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Additional Information</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Add a cover letter or anything else you want to share"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
             </div>
-
             <div className="my-6">
-              <FormUploadFile form={form} />
+              <FormUploadFile form={form} name="resume" />
             </div>
-
-            <Button type="submit" className="w-full">
-              Apply
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={form.formState.isSubmitting}
+            >
+              {form.formState.isSubmitting ? 'Loading...' : 'Apply'}
             </Button>
           </form>
         </Form>
