@@ -1,8 +1,16 @@
 import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+
+    const name = searchParams.get('name') ?? '';
+    const location = searchParams.get('location') ?? '';
+    const industry = searchParams.get('industry')
+      ? searchParams.get('industry')?.split(',')
+      : undefined;
+
     const companies = await prisma.company.findMany({
       include: {
         _count: {
@@ -11,15 +19,36 @@ export async function GET() {
           },
         },
       },
+      where: {
+        isCompleted: {
+          equals: true,
+        },
+        name: {
+          mode: 'insensitive',
+          contains: name,
+        },
+        location: {
+          mode: 'insensitive',
+          contains: location,
+        },
+        industry: {
+          mode: 'insensitive',
+          in: industry,
+        },
+      },
     });
 
-    if (!companies) {
-      throw new Error('No data');
+    if (!companies.length) {
+      return NextResponse.json({
+        status: 'success',
+        message: 'No data companies',
+        data: [],
+      });
     }
 
     return NextResponse.json({
       status: 'success',
-      message: 'Success get list of jobs',
+      message: 'Success get list of companies',
       data: companies,
     });
   } catch (error) {

@@ -1,8 +1,16 @@
 import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+
+    const role = searchParams.get('role') ?? '';
+    const location = searchParams.get('location') ?? '';
+    const category = searchParams.get('category')
+      ? searchParams.get('category')?.split(',')
+      : undefined;
+
     const jobs = await prisma.job.findMany({
       include: {
         company: true,
@@ -15,11 +23,31 @@ export async function GET() {
         dueDate: {
           gt: new Date(),
         },
+        role: {
+          mode: 'insensitive',
+          contains: role,
+        },
+        company: {
+          location: {
+            mode: 'insensitive',
+            contains: location,
+          },
+        },
+        category: {
+          name: {
+            mode: 'insensitive',
+            in: category,
+          },
+        },
       },
     });
 
-    if (!jobs) {
-      throw new Error('No data');
+    if (!jobs.length) {
+      return NextResponse.json({
+        status: 'success',
+        message: 'No data jobs',
+        data: [],
+      });
     }
 
     return NextResponse.json({

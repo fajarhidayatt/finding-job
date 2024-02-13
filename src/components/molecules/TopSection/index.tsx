@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { patternInk } from '@/images';
 
 interface TopSectionProps {
   title: [string, string];
@@ -18,7 +19,7 @@ const TopSection = ({ title, description, children }: TopSectionProps) => {
             </h1>
             <div className="absolute inset-x-0">
               <Image
-                src="/images/pattern-ink.png"
+                src={patternInk}
                 alt="pattern"
                 width={200}
                 height={30}

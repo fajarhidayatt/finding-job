@@ -1,6 +1,15 @@
-export const getCategories = async () => {
-  const res = await fetch('http://localhost:3000/api/v1/jobs/categories');
-  const data = res.json();
+const BASE_URL = process.env.NEXT_PUBLIC_APP_BASE_URL;
 
-  return data;
+export const getJobsAPI = async (query: string = '') => {
+  const request = await fetch(`${BASE_URL}/api/jobs?${query}`);
+  const response = await request.json();
+
+  return response;
+};
+
+export const getCategoriesAPI = async () => {
+  const request = await fetch(`${BASE_URL}/api/jobs/categories`);
+  const response = await request.json();
+
+  return response;
 };
