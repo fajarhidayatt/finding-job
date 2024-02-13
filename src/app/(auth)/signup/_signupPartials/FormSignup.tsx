@@ -1,6 +1,17 @@
 'use client';
 
 import Link from 'next/link';
+import { z } from 'zod';
+import { Form } from '@/components/ui/form';
+import { toast } from '@/components/ui/use-toast';
+import { Button } from '@/components/ui/button';
+import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
+import { signupAPI } from '@/fetcher/auth';
+import { SelectItem } from '@/components/ui/select';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { formSignupSchema } from '@/lib/validations';
+import { InputSelect, InputText } from '@/components/atoms';
 import {
   Card,
   CardContent,
@@ -9,26 +20,17 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Form } from '@/components/ui/form';
-import { Button } from '@/components/ui/button';
-import { InputSelect, InputText } from '@/components/atoms';
-
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { useToast } from '@/components/ui/use-toast';
-import { useRouter } from 'next/navigation';
-import { zodResolver } from '@hookform/resolvers/zod';
-
-import { ROLE_OPTIONS } from '@/constants';
-import { formSignupSchema } from '@/lib/validations';
-import { parsingOptionsValue } from '@/lib/parser';
 
 const FormSignup = () => {
   const router = useRouter();
-  const { toast } = useToast();
-
   const form = useForm<z.infer<typeof formSignupSchema>>({
     resolver: zodResolver(formSignupSchema),
+    defaultValues: {
+      username: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    },
   });
 
   const onSubmit = async (val: z.infer<typeof formSignupSchema>) => {
@@ -37,21 +39,15 @@ const FormSignup = () => {
         throw new Error('Something worng, please try again!');
       }
 
-      const post = await fetch('/api/v1/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(val),
-      });
-
-      const res = await post.json();
+      const res = await signupAPI(val);
 
       if (res.status !== 'success') {
         throw new Error(res.message);
       }
 
       toast({
-        title: 'Create account success',
-        description: res.message,
+        title: 'Success',
+        description: 'Create account successfully. Redirecting...',
       });
 
       setTimeout(() => {
@@ -67,8 +63,6 @@ const FormSignup = () => {
       }
     }
   };
-
-  const roleOptions = parsingOptionsValue(ROLE_OPTIONS);
 
   return (
     <Card>
@@ -110,10 +104,12 @@ const FormSignup = () => {
             <InputSelect
               control={form.control}
               name="role"
-              options={roleOptions}
-              label="Who You Are"
+              label="Who you are"
               placeholder="Select your role type"
-            />
+            >
+              <SelectItem value="JOBSEEKER">Jobseeker</SelectItem>
+              <SelectItem value="COMPANY">Company</SelectItem>
+            </InputSelect>
             <Button
               type="submit"
               className="w-full"

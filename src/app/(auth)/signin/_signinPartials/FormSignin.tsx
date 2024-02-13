@@ -2,56 +2,65 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Form } from '@/components/ui/form';
-import { Button } from '@/components/ui/button';
-import { useToast } from '@/components/ui/use-toast';
-import { InputText } from '@/components/atoms';
-
 import { z } from 'zod';
+import { Form } from '@/components/ui/form';
+import { toast } from '@/components/ui/use-toast';
+import { Button } from '@/components/ui/button';
 import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
+import { logoDark } from '@/images';
 import { useRouter } from 'next/navigation';
+import { InputText } from '@/components/atoms';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { formSigninSchema } from '@/lib/validations';
 
 const FormSignin = () => {
   const router = useRouter();
-  const { toast } = useToast();
-
   const form = useForm<z.infer<typeof formSigninSchema>>({
     resolver: zodResolver(formSigninSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
   });
 
   const onSubmit = async (val: z.infer<typeof formSigninSchema>) => {
-    const signin = await signIn('credentials', {
-      ...val,
-      redirect: false,
-    });
-
-    if (signin?.error) {
-      toast({
-        variant: 'destructive',
-        title: 'Sign In Failed',
-        description: 'Email or Password is wrong',
+    try {
+      const signin = await signIn('credentials', {
+        email: val.email,
+        password: val.password,
+        redirect: false,
       });
 
-      return;
+      if (!signin?.ok) {
+        throw new Error(signin?.error as string);
+      }
+
+      toast({
+        title: 'Sign In Success',
+        description: 'Welcome back!',
+      });
+
+      router.refresh();
+
+      setTimeout(() => {
+        router.push('/');
+      }, 500);
+    } catch (error) {
+      if (error instanceof Error) {
+        toast({
+          variant: 'destructive',
+          title: 'Sign In Failed',
+          description: error.message,
+        });
+      }
     }
-
-    toast({
-      title: 'Sign In Success',
-      description: 'Welcome back!',
-    });
-
-    setTimeout(() => {
-      router.push('/');
-    }, 500);
   };
 
   return (
     <div className="max-w-80 w-full">
       <Link href="/">
-        <Image src="/images/logo-dark.png" alt="logo" width={175} height={36} />
+        <Image src={logoDark} alt="logo" width={175} height={39} />
       </Link>
       <div className="mt-10">
         <Form {...form}>
