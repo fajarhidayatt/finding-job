@@ -4,15 +4,15 @@ import { ChangeEvent, useState } from 'react';
 import { FieldValues, Path, UseFormReturn } from 'react-hook-form';
 import { FormField, FormItem, FormMessage } from '@/components/ui/form';
 
-interface FormUploadFileProps<T extends FieldValues> {
+interface UploadResumeProps<T extends FieldValues> {
   form: UseFormReturn<T>;
   name: Path<T>;
 }
 
-const FormUploadFile = <T extends FieldValues>({
+const UploadResume = <T extends FieldValues>({
   form,
   name,
-}: FormUploadFileProps<T>) => {
+}: UploadResumeProps<T>) => {
   const [nameFile, SetNameFile] = useState<string>('Attach Resume / CV');
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -53,4 +53,4 @@ const FormUploadFile = <T extends FieldValues>({
   );
 };
 
-export default FormUploadFile;
+export default UploadResume;

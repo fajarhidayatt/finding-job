@@ -11,7 +11,6 @@ import BenefitCard from './Card/BenefitCard';
 import FormSearch from './Form/FormSearch';
 import FormFilter from './Form/FormFilter';
 import FormApply from './Form/FormApply';
-import FormUploadFile from './Form/FormUploadFile';
 import FormBenefit from './Form/FormBenefit';
 
 export {
@@ -26,6 +25,5 @@ export {
   BenefitCard,
   FormFilter,
   FormApply,
-  FormUploadFile,
   FormBenefit,
 };

@@ -1,27 +1,29 @@
-import InputSkill from './Input/InputSkill';
-import InputCKEditor from './Input/InputCKEditor';
 import InputBenefit from './Input/InputBenefit';
-import InputText from './Input/InputText';
-import InputSelect from './Input/InputSelect';
+import InputCKEditor from './Input/InputCKEditor';
 import InputDate from './Input/InputDate';
-import InputSocialLink from './Input/InputSocialLink';
 import InputRadio from './Input/InputRadio';
+import InputSelect from './Input/InputSelect';
+import InputSkill from './Input/InputSkill';
+import InputSocialLink from './Input/InputSocialLink';
+import InputText from './Input/InputText';
 import InputWrapper from './Input/InputWrapper';
-import UploadImage from './UploadFIle/UploadImage';
 import ProfileAccount from './ProfileAccount';
 import SocialIcon from './SocialIcon';
+import UploadImage from './UploadFIle/UploadImage';
+import UploadResume from './UploadFIle/UploadResume';
 
 export {
-  InputSkill,
-  InputCKEditor,
   InputBenefit,
-  InputText,
-  InputSelect,
+  InputCKEditor,
   InputDate,
-  InputSocialLink,
   InputRadio,
+  InputSelect,
+  InputSkill,
+  InputSocialLink,
+  InputText,
   InputWrapper,
-  UploadImage,
   ProfileAccount,
   SocialIcon,
+  UploadImage,
+  UploadResume,
 };

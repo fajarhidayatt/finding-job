@@ -3,7 +3,7 @@ import Image from 'next/image';
 import prisma from '@/lib/prisma';
 import { Button } from '@/components/ui/button';
 import { FormApply } from '@/components/molecules';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/auth';
 import { getServerSession } from 'next-auth';
 
 interface InfoJobProps {

@@ -7,12 +7,13 @@ import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
 import { Textarea } from '@/components/ui/textarea';
 import { useState } from 'react';
-import { InputText } from '@/components/atoms';
+import { useRouter } from 'next/navigation';
 import { Separator } from '@/components/ui/separator';
-import { useSession } from 'next-auth/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { formApplySchema } from '@/lib/validations';
+import { jobseekerApplyAPI } from '@/fetcher/account';
 import { supabaseUploadFile } from '@/lib/supabase';
+import { InputText, UploadResume } from '@/components/atoms';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import {
   Form,
@@ -22,8 +23,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-
-import FormUploadFile from './FormUploadFile';
 
 interface FormApplyProps {
   jobId: string;
@@ -40,8 +39,8 @@ const FormApply = ({
   location,
   jobType,
 }: FormApplyProps) => {
-  const { data: session } = useSession();
   const [open, setOpen] = useState(false);
+  const router = useRouter();
   const form = useForm<z.infer<typeof formApplySchema>>({
     resolver: zodResolver(formApplySchema),
   });
@@ -51,21 +50,14 @@ const FormApply = ({
       const { filename } = await supabaseUploadFile(val.resume, 'resumes');
 
       const data = {
+        jobId: jobId,
         resume: filename,
         coverLetter: val.coverLetter ?? '',
-        jobseekerId: session?.user.id,
-        jobId: jobId,
       };
 
-      const post = await fetch('/api/v1/jobseeker/apply', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
+      const res = await jobseekerApplyAPI(data);
 
-      const res = await post.json();
-
-      if (res.status !== 'Success') {
+      if (res.status === 'error') {
         throw new Error(res.message);
       }
 
@@ -74,6 +66,7 @@ const FormApply = ({
         description: res.message,
       });
       setOpen(!open);
+      router.refresh();
     } catch (error) {
       if (error instanceof Error) {
         toast({
@@ -179,7 +172,7 @@ const FormApply = ({
               </div>
             </div>
             <div className="my-6">
-              <FormUploadFile form={form} name="resume" />
+              <UploadResume form={form} name="resume" />
             </div>
             <Button
               type="submit"
