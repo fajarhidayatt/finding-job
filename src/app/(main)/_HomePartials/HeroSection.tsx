@@ -1,11 +1,18 @@
 import Image from 'next/image';
 import { FormSearch } from '@/components/molecules';
+import { heroImg, patternHero, patternInk } from '@/images';
 
 const HeroSection = () => {
   return (
     <section className="container flex items-center justify-between relative overflow-hidden">
-      <div className="w-4/5 aspect-square absolute top-0 right-0 -z-10">
-        <Image src="/images/pattern-hero.png" alt="hero pattern" fill />
+      <div className="md:w-4/5 aspect-square absolute top-0 right-0 -z-10">
+        <Image
+          src={patternHero}
+          alt="Hero pattern"
+          width={560}
+          height={560}
+          className="w-full h-full origin-top-right"
+        />
       </div>
       <div className="lg:w-1/2 mt-10 mx-auto text-center lg:text-left">
         <div className="max-w-lg w-full mx-auto lg:mx-0">
@@ -15,10 +22,10 @@ const HeroSection = () => {
           </h1>
           <div className="mb-5">
             <Image
-              src="/images/pattern-ink.png"
-              alt="pattern"
-              width={455}
-              height={32}
+              src={patternInk}
+              alt="Pattern ink"
+              width={448}
+              height={39}
               className="block max-w-md w-full mx-auto lg:mx-0 object-contain"
             />
           </div>
@@ -27,15 +34,24 @@ const HeroSection = () => {
             heights and passionate about startups.
           </p>
         </div>
-        <FormSearch />
+        <FormSearch
+          pathname="/jobs"
+          inputName="role"
+          inputPlaceholder="Job title or role name"
+          optionName="location"
+          optionList={['Jakarta', 'Bandung', 'Semarang']}
+          optionPlaceholder="Select a location"
+          formDescription="Popular: UI Designer, Frontend, Data Scientist, Programmer"
+        />
       </div>
       <div className="p-10 hidden lg:block">
         <Image
-          src="/images/hero.png"
-          alt="hero image"
+          src={heroImg}
+          alt="Hero image"
           width={450}
-          height={600}
-          className="rounded-s-3xl rounded-br-3xl object-contain"
+          height={635}
+          placeholder="blur"
+          className="rounded-s-3xl rounded-br-3xl"
         />
       </div>
     </section>

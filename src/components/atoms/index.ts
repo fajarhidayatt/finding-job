@@ -1,4 +1,3 @@
-import { Breadcrumb, BreadcrumbItem } from './Breadcrumb';
 import InputSkill from './Input/InputSkill';
 import InputCKEditor from './Input/InputCKEditor';
 import InputBenefit from './Input/InputBenefit';
@@ -10,10 +9,9 @@ import InputRadio from './Input/InputRadio';
 import InputWrapper from './Input/InputWrapper';
 import UploadImage from './UploadFIle/UploadImage';
 import ProfileAccount from './ProfileAccount';
+import SocialIcon from './SocialIcon';
 
 export {
-  Breadcrumb,
-  BreadcrumbItem,
   InputSkill,
   InputCKEditor,
   InputBenefit,
@@ -25,4 +23,5 @@ export {
   InputWrapper,
   UploadImage,
   ProfileAccount,
+  SocialIcon,
 };

@@ -1,30 +1,26 @@
-import Image from 'next/image';
+import Image, { StaticImageData } from 'next/image';
+import { cmpBubles, cmpDsign, cmpJobox, cmpTwins, cmpWave } from '@/images';
 
-type TClient = {
-  src: string;
-  alt: string;
-};
-
-const clients: TClient[] = [
+const clients: Record<string, StaticImageData | string>[] = [
   {
-    src: '/images/cmp-jobox.png',
-    alt: 'jobox',
+    src: cmpJobox,
+    alt: 'Jobox',
   },
   {
-    src: '/images/cmp-dsign.png',
-    alt: 'dsign',
+    src: cmpDsign,
+    alt: 'Dsign',
   },
   {
-    src: '/images/cmp-wave.png',
-    alt: 'wave',
+    src: cmpWave,
+    alt: 'Wave',
   },
   {
-    src: '/images/cmp-twins.png',
-    alt: 'twins',
+    src: cmpTwins,
+    alt: 'Twins',
   },
   {
-    src: '/images/cmp-bubles.png',
-    alt: 'bubles',
+    src: cmpBubles,
+    alt: 'Bubles',
   },
 ];
 
@@ -35,13 +31,13 @@ const ClientsSection = () => {
         Companies we helped grow
       </h5>
       <div className="mt-8 flex items-center justify-center flex-wrap gap-x-14 gap-y-10">
-        {clients.map((client: TClient, i: number) => (
+        {clients.map((client, i: number) => (
           <Image
             key={i}
             src={client.src}
-            alt={client.alt}
-            width={139}
-            height={35}
+            alt={client.alt as string}
+            width={140}
+            height={50}
           />
         ))}
       </div>

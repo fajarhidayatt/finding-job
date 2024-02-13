@@ -1,15 +1,18 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { useState } from 'react';
+import { logoDark } from '@/images';
 import { useSession } from 'next-auth/react';
+import { usePathname } from 'next/navigation';
 import { AlignJustify } from 'lucide-react';
+import { activeMenu, cn } from '@/lib/utils';
 import { ProfileAccount } from '@/components/atoms';
 
 const Navbar = () => {
+  const pathname = usePathname();
   const [toggle, setToggle] = useState<boolean>(false);
   const { data: session } = useSession();
 
@@ -18,13 +21,7 @@ const Navbar = () => {
       <div className="flex flex-col md:flex-row md:items-center">
         <div className="flex items-center justify-between">
           <Link href="/" className="w-48">
-            <Image
-              src="/images/logo-dark.png"
-              alt="logo"
-              width={160}
-              height={36}
-              className="w-full h-full object-contain"
-            />
+            <Image src={logoDark} alt="logo" width={192} height={43} />
           </Link>
           <Button
             size="icon"
@@ -40,21 +37,38 @@ const Navbar = () => {
             toggle && 'max-h-screen'
           )}
         >
-          <ul className="w-full flex flex-col md:flex-row gap-3 mt-5 md:mt-0">
+          <ul className="w-full flex flex-col md:flex-row gap-3 md:gap-5 mt-5 md:mt-0">
+            <li>
+              <Link
+                href="/"
+                className={cn(
+                  'font-medium text-muted-foreground hover:text-primary',
+                  activeMenu(pathname, /^\/$/)
+                )}
+              >
+                Home
+              </Link>
+            </li>
             <li>
               <Link
                 href="/jobs"
-                className="font-medium text-muted-foreground hover:text-primary"
+                className={cn(
+                  'font-medium text-muted-foreground hover:text-primary',
+                  activeMenu(pathname, /^\/jobs\/*/)
+                )}
               >
-                Find Jobs
+                Jobs
               </Link>
             </li>
             <li>
               <Link
                 href="/companies"
-                className="font-medium text-muted-foreground hover:text-primary"
+                className={cn(
+                  'font-medium text-muted-foreground hover:text-primary',
+                  activeMenu(pathname, /^\/companies\/*/)
+                )}
               >
-                Browse Company
+                Companies
               </Link>
             </li>
           </ul>

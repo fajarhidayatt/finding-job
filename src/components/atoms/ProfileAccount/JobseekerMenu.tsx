@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { signOut } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
+import { signOut } from 'next-auth/react';
 import { Separator } from '@/components/ui/separator';
 import { ClipboardList, Settings, User } from 'lucide-react';
 

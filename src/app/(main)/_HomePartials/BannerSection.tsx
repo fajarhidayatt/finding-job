@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
+import { imgDashboard } from '@/images';
 
 const BannerSection = () => {
   return (
@@ -23,10 +24,11 @@ const BannerSection = () => {
         </div>
         <div>
           <Image
-            src="/images/img-dashboard.png"
-            alt="dashboard image"
+            src={imgDashboard}
+            alt="Dashboard image"
             width={500}
-            height={300}
+            height={305}
+            placeholder="blur"
           />
         </div>
       </div>
