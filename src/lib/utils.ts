@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const getImageSrc = (
-  image: string | undefined,
+  image: string | undefined | null,
   username: string
 ): string => {
   if (image) {
@@ -16,4 +16,12 @@ export const getImageSrc = (
   }
 
   return `https://ui-avatars.com/api/?name=${username}`;
+};
+
+export const activeMenu = (currPath: string, path: RegExp) => {
+  if (path.test(currPath)) {
+    return 'text-primary relative after:w-1/2 after:h-0.5 after:bg-primary after:absolute after:-bottom-1 after:left-1/2 after:-translate-x-1/2';
+  }
+
+  return '';
 };

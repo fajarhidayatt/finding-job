@@ -1,72 +1,55 @@
 'use client';
 
 import { z } from 'zod';
+import { Form } from '@/components/ui/form';
+import { Plus } from 'lucide-react';
+import { toast } from '@/components/ui/use-toast';
+import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
-import { useToast } from '@/components/ui/use-toast';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
-import { Plus } from 'lucide-react';
-import { Form } from '@/components/ui/form';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { parsingOptionsValue } from '@/lib/parser';
-import { formLinkSchema } from '@/lib/validations';
-import { LINK_OPTIONS } from '@/constants';
+import { SelectItem } from '@/components/ui/select';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { LINK_OPTIONS } from '@/constants';
+import { createLinkAPI } from '@/fetcher/account';
+import { formLinkSchema } from '@/lib/validations';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import InputSelect from './InputSelect';
 import InputText from './InputText';
 
 const InputSocialLink = () => {
   const [open, setOpen] = useState(false);
-  const { data: session } = useSession();
-  const { toast } = useToast();
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formLinkSchema>>({
     resolver: zodResolver(formLinkSchema),
+    defaultValues: {
+      link: '',
+    },
   });
 
   const onSubmit = async (val: z.infer<typeof formLinkSchema>) => {
     try {
-      let jobseekerId, companyId;
+      const res = await createLinkAPI(val);
 
-      if (session?.user.role === 'JOBSEEKER') {
-        jobseekerId = session.user.id;
-      } else if (session?.user.role === 'COMPANY') {
-        companyId = session.user.id;
+      if (res.status === 'error') {
+        throw new Error(res.message);
       }
 
-      const data = {
-        ...val,
-        jobseekerId,
-        companyId,
-      };
-
-      const res = await fetch(`/api/v1/links`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!res.ok) {
-        throw new Error('Something wrong, please try again!');
-      }
-
-      setOpen(!open);
       toast({
         title: 'Success',
-        description: 'Success add social link',
+        description: res.message,
       });
+      setOpen(!open);
       router.refresh();
     } catch (error) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Something wrong, please try again!',
-      });
+      if (error instanceof Error) {
+        toast({
+          variant: 'destructive',
+          title: 'Failed',
+          description: error.message,
+        });
+      }
     }
   };
 
@@ -84,10 +67,15 @@ const InputSocialLink = () => {
             <InputSelect
               control={form.control}
               name="name"
-              options={parsingOptionsValue(LINK_OPTIONS)}
               label="Name"
               placeholder="Select link name"
-            />
+            >
+              {LINK_OPTIONS.map((link: string, index: number) => (
+                <SelectItem key={index} value={link}>
+                  {link}
+                </SelectItem>
+              ))}
+            </InputSelect>
             <InputText
               control={form.control}
               name="link"

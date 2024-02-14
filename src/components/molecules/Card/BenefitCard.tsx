@@ -1,7 +1,9 @@
-import { TBenefit } from '@/types';
 import { LayoutGrid } from 'lucide-react';
 
-interface BenefitCardProps extends TBenefit {}
+interface BenefitCardProps {
+  name: string;
+  description: string;
+}
 
 const BenefitCard = ({ name, description }: BenefitCardProps) => {
   return (

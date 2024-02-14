@@ -1,23 +1,33 @@
-import Link from 'next/link';
+'use client';
+
 import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { logoLight } from '@/images';
+import { SocialIcon } from '@/components/atoms';
 
-const aboutLinks = [
+const resourceLinks: string[] = ['Help Docs', 'Guide', 'Updates', 'Contact Us'];
+const aboutLinks: string[] = [
   'Companies',
   'Pricing',
   'Terms',
   'Advice',
   'Privacy Policy',
 ];
-const resourceLinks = ['Help Docs', 'Guide', 'Updates', 'Contact Us'];
-const socialMediaImg = [
-  '/images/soc-facebook.png',
-  '/images/soc-instagram.png',
-  '/images/soc-twitter.png',
-  '/images/soc-linkedIn.png',
-  '/images/soc-dribbble.png',
+const socialLinks: Record<string, string>[] = [
+  {
+    url: 'https://www.facebook.com',
+    icon: 'Facebook',
+  },
+  {
+    url: 'https://www.instagram.com',
+    icon: 'Instagram',
+  },
+  {
+    url: 'https://www.twitter.com',
+    icon: 'Twitter',
+  },
 ];
 
 const Footer = () => {
@@ -29,7 +39,7 @@ const Footer = () => {
           <section className="order-1 lg:col-span-2">
             <div className="w-40">
               <Image
-                src="/images/logo-light.png"
+                src={logoLight}
                 alt="logo"
                 width={160}
                 height={36}
@@ -49,10 +59,8 @@ const Footer = () => {
             </h5>
             <ul className="space-y-4">
               {aboutLinks.map((item: string, i: number) => (
-                <li key={i}>
-                  <Link className="block text-muted" href="/">
-                    {item}
-                  </Link>
+                <li key={i} className="block text-muted cursor-pointer">
+                  {item}
                 </li>
               ))}
             </ul>
@@ -65,10 +73,8 @@ const Footer = () => {
             </h5>
             <ul className="space-y-4">
               {resourceLinks.map((item: string, i: number) => (
-                <li key={i}>
-                  <Link className="block text-muted" href="/">
-                    {item}
-                  </Link>
+                <li key={i} className="block text-muted cursor-pointer">
+                  {item}
                 </li>
               ))}
             </ul>
@@ -90,19 +96,18 @@ const Footer = () => {
             </form>
           </section>
         </div>
-
         <Separator className="mt-10 mb-5 bg-neutral-300" />
 
         {/* copyright */}
         <div className="flex items-center justify-between">
           <div className="text-neutral-300">
-            2024 @ FindingJob. All rights reserved.
+            2024 @FindingJob. All rights reserved.
           </div>
-          <ul className="flex gap-3">
-            {socialMediaImg.map((item: string, i: number) => (
-              <li key={i}>
-                <a href="https://www.google.com/" target="_blank">
-                  <Image src={item} alt={item} width={32} height={32} />
+          <ul className="flex gap-5 text-white">
+            {socialLinks.map((link, index: number) => (
+              <li key={index}>
+                <a href={link.url} target="_blank" rel="noopener noreferrer">
+                  <SocialIcon name={link.icon} />
                 </a>
               </li>
             ))}

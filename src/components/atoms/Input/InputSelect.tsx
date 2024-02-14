@@ -13,8 +13,6 @@ import {
 } from '@/components/ui/select';
 import { Control, FieldValues, Path } from 'react-hook-form';
 
-type TOption = Record<string, string>;
-
 interface InputSelectProps<T extends FieldValues> {
   name: Path<T>;
   control: Control<T>;
@@ -53,11 +51,3 @@ const InputSelect = <T extends FieldValues>({
 };
 
 export default InputSelect;
-
-// {
-//   options.map((option: TOption) => (
-//     <SelectItem key={option.key} value={option.value}>
-//       {option.value}
-//     </SelectItem>
-//   ));
-// }

@@ -44,6 +44,7 @@ const UploadImage = <T extends FieldValues>({
               height={128}
               src={previewImg}
               alt="preview"
+              priority
               className="w-full h-full object-cover"
             />
           ) : (

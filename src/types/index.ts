@@ -1,3 +1,5 @@
+import { JsonValue } from '@prisma/client/runtime/library';
+
 export type TBucket = 'images' | 'resumes';
 
 export type TAccount = {
@@ -68,8 +70,7 @@ export type TJob = {
   salaryFrom: string;
   salaryTo: string;
   requiredSkills: string[];
-  benefits: TBenefit[];
-  status: string;
+  benefits: JsonValue[];
   companyId: string;
   company?: TCompany;
   categoryId: string;

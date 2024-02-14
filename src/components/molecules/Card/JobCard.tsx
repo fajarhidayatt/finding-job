@@ -62,7 +62,7 @@ const JobCard = ({
           </div>
         </div>
         <div className="flex flex-wrap gap-2 mt-5">
-          {requiredSkills.slice(0, 3).map((skill: string, index: number) => (
+          {requiredSkills?.slice(0, 3).map((skill: string, index: number) => (
             <Badge
               key={index}
               variant="outline"
@@ -71,9 +71,9 @@ const JobCard = ({
               {skill}
             </Badge>
           ))}
-          {requiredSkills.length > 3 && (
+          {requiredSkills?.length > 3 && (
             <span className="text-sm text-primary font-medium">
-              {requiredSkills.length - 3}+
+              {requiredSkills?.length - 3}+
             </span>
           )}
         </div>

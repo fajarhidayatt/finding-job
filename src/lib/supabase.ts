@@ -43,19 +43,25 @@ export const supabaseGetFile = (filename: string, bucket: TBucket) => {
 
 export const supabaseUpdateFile = async (
   file: File,
-  filename: string,
+  oldFilename: string,
   bucket: TBucket
 ) => {
+  // delete file
+  await supabase.storage.from(bucket).remove([`public/${oldFilename}`]);
+
+  // insert file
+  const newFilename = getFilename(file);
   const { data, error } = await supabase.storage
     .from(bucket)
-    .update(`public/${filename}`, file, {
+    .upload(`public/${newFilename}`, file, {
       cacheControl: '3600',
-      upsert: true,
+      upsert: false,
     });
 
   return {
     data,
     error,
+    filename: newFilename,
   };
 };
 
