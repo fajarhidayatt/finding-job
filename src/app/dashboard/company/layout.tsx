@@ -1,5 +1,8 @@
-import { Metadata } from 'next';
 import { Sidebar } from '@/components/molecules';
+import { redirect } from 'next/navigation';
+import { Metadata } from 'next';
+import { authOptions } from '@/lib/auth';
+import { getServerSession } from 'next-auth';
 
 export const metadata: Metadata = {
   title: {
@@ -7,11 +10,19 @@ export const metadata: Metadata = {
   },
 };
 
-export default function DashboardCompanyLayout({
+export default async function DashboardCompanyLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    redirect('/signin');
+  } else if (session.user.role !== 'COMPANY') {
+    redirect('/');
+  }
+
   return (
     <main className="flex justify-end">
       <Sidebar />
