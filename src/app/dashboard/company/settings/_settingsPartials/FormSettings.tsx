@@ -8,8 +8,9 @@ import { useForm } from 'react-hook-form';
 import { TAccount } from '@/types';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { updateAccountAPI } from '@/fetcher/account';
+import { formSettingSchema } from '@/lib/validations';
 import { InputText, InputWrapper } from '@/components/atoms';
-import { formCompanySettingSchema } from '@/lib/validations';
 
 interface FormSettingsProps {
   account: TAccount;
@@ -17,30 +18,19 @@ interface FormSettingsProps {
 
 const FormSettings = ({ account }: FormSettingsProps) => {
   const router = useRouter();
-  const form = useForm<z.infer<typeof formCompanySettingSchema>>({
-    resolver: zodResolver(formCompanySettingSchema),
+  const form = useForm<z.infer<typeof formSettingSchema>>({
+    resolver: zodResolver(formSettingSchema),
     defaultValues: {
       username: account.username ?? '',
       email: account.email ?? '',
+      password: '',
+      confirmPassword: '',
     },
   });
 
-  const onSubmit = async (val: z.infer<typeof formCompanySettingSchema>) => {
+  const onSubmit = async (val: z.infer<typeof formSettingSchema>) => {
     try {
-      const data = {
-        accountId: account.id,
-        username: val.username,
-        email: val.email,
-        password: val.password ?? '',
-      };
-
-      const post = await fetch('/api/v1/account/settings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-
-      const res = await post.json();
+      const res = await updateAccountAPI(val);
 
       if (res.status === 'error') {
         throw new Error(res.message);
@@ -48,11 +38,12 @@ const FormSettings = ({ account }: FormSettingsProps) => {
 
       toast({
         title: 'Success',
-        description: 'Success update profile account',
+        description: res.message,
       });
       router.refresh();
     } catch (error) {
       if (error instanceof Error) {
+        console.log(error.message);
         toast({
           variant: 'destructive',
           title: 'Error',

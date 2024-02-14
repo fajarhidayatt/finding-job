@@ -1,9 +1,8 @@
+import prisma from '@/lib/prisma';
 import { TCompany } from '@/types';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/auth';
 import { getServerSession } from 'next-auth';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-
-import prisma from '@/lib/prisma';
 import TabOverview from './_profilePartials/TabOverview';
 import TabSocialLinks from './_profilePartials/TabSocialLinks';
 

@@ -1,9 +1,9 @@
 import prisma from '@/lib/prisma';
+import { TJob } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import { Separator } from '@/components/ui/separator';
 import { BenefitCard } from '@/components/molecules';
-import { TBenefit, TJob } from '@/types';
 
 interface TabJobDetailProps {
   jobId: string;
@@ -79,7 +79,7 @@ const TabJobDetail = async ({ jobId }: TabJobDetailProps) => {
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          {job.benefits.map((benefit: TBenefit, index: number) => (
+          {job.benefits.map((benefit: any, index: number) => (
             <BenefitCard
               key={index}
               name={benefit.name}

@@ -3,7 +3,6 @@ import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { TApplicant } from '@/types';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { MoreVertical } from 'lucide-react';
 import { getServerSession } from 'next-auth';
 import {
@@ -14,17 +13,16 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-
-const APPLICANTS_COLUMNS: string[] = [
-  'Name',
-  'Role',
-  'Date Applied',
-  'Status',
-] as const;
+import { authOptions } from '@/lib/auth';
 
 const AllApplicants = async () => {
   const session = await getServerSession(authOptions);
+
   const applicants = (await prisma.applicant.findMany({
+    include: {
+      jobseeker: true,
+      job: true,
+    },
     where: {
       job: {
         companyId: session?.user.id,
@@ -39,9 +37,10 @@ const AllApplicants = async () => {
         <Table>
           <TableHeader>
             <TableRow>
-              {APPLICANTS_COLUMNS.map((item: string, i: number) => (
-                <TableHead key={item + i}>{item}</TableHead>
-              ))}
+              <TableHead>Name</TableHead>
+              <TableHead>Role</TableHead>
+              <TableHead>Date Applied</TableHead>
+              <TableHead>Status</TableHead>
               <TableHead>Action</TableHead>
             </TableRow>
           </TableHeader>
@@ -53,7 +52,7 @@ const AllApplicants = async () => {
                   <TableCell>{applicant.job?.role}</TableCell>
                   <TableCell>{format(applicant.applyDate, 'PP')}</TableCell>
                   <TableCell>
-                    <Badge variant="outline">{applicant.status}</Badge>
+                    <Badge>{applicant.status}</Badge>
                   </TableCell>
                   <TableCell>
                     <Button

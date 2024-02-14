@@ -1,14 +1,13 @@
-'use client';
-
+import Link from 'next/link';
+import prisma from '@/lib/prisma';
 import { TJob } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
+import { authOptions } from '@/lib/auth';
+import { getServerSession } from 'next-auth';
 import { MoreVertical, Plus } from 'lucide-react';
 import { JOB_LISTING_COLUMN } from '@/constants';
-import { useCallback, useEffect, useState } from 'react';
 import {
   Table,
   TableBody,
@@ -18,45 +17,32 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-const JobListings = () => {
-  const router = useRouter();
-  const { data: session } = useSession();
-  const [jobs, setJobs] = useState<TJob[]>([]);
+const JobListings = async () => {
+  const session = await getServerSession(authOptions);
 
-  const dataCompanyJobs = useCallback(async () => {
-    const companyId = session?.user.id;
-
-    const res = await fetch(`/api/v1/company/${companyId}/job`);
-    const data = await res.json();
-
-    setJobs(data.data);
-  }, [session?.user.id]);
-
-  useEffect(() => {
-    if (session?.user.id) {
-      dataCompanyJobs();
-    }
-  }, [dataCompanyJobs, session?.user.id]);
+  const jobs = (await prisma.job.findMany({
+    where: {
+      companyId: session?.user.id,
+    },
+  })) as [];
 
   return (
     <div className="py-5">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold">Job Listings</h1>
-        <Button
-          type="button"
-          size="sm"
-          onClick={() => router.push('/dashboard/company/post-a-job')}
-        >
-          <Plus className="mr-2" />
-          Post a job
-        </Button>
+        <Link href="/dashboard/company/post-a-job">
+          <Button type="button" size="sm">
+            <Plus className="mr-2" />
+            <span>Post a job</span>
+          </Button>
+        </Link>
       </div>
       <div className="mt-5">
         <Table>
           <TableHeader>
             <TableRow>
-              {JOB_LISTING_COLUMN.map((item: string, i: number) => (
-                <TableHead key={item + i}>{item}</TableHead>
+              {JOB_LISTING_COLUMN.map((item: string, index: number) => (
+                <TableHead key={index}>{item}</TableHead>
               ))}
               <TableHead>Action</TableHead>
             </TableRow>
@@ -83,15 +69,11 @@ const JobListings = () => {
                     {job.totalApplicants} / {job.totalNeeds}
                   </TableCell>
                   <TableCell>
-                    <Button
-                      size="icon"
-                      variant="outline"
-                      onClick={() =>
-                        router.push(`/dashboard/company/job-detail/${job.id}`)
-                      }
-                    >
-                      <MoreVertical />
-                    </Button>
+                    <Link href={`/dashboard/company/job-detail/${job.id}`}>
+                      <Button size="icon" variant="outline">
+                        <MoreVertical />
+                      </Button>
+                    </Link>
                   </TableCell>
                 </TableRow>
               ))

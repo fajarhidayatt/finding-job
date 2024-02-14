@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 import { TApplicant } from '@/types';
 import { MoreVertical } from 'lucide-react';
-import { APPLICANT_COLUMNS } from '@/constants';
 import {
   Table,
   TableBody,
@@ -32,9 +31,9 @@ const TabApplicants = async ({ jobId }: TabApplicantsProps) => {
     <Table>
       <TableHeader>
         <TableRow>
-          {APPLICANT_COLUMNS.map((item: string, index: number) => (
-            <TableHead key={index}>{item}</TableHead>
-          ))}
+          <TableHead>Name</TableHead>
+          <TableHead>Date Applied</TableHead>
+          <TableHead>Status</TableHead>
           <TableHead>Action</TableHead>
         </TableRow>
       </TableHeader>

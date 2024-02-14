@@ -2,15 +2,19 @@
 
 import { z } from 'zod';
 import { Form } from '@/components/ui/form';
+import { toast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
-import { useToast } from '@/components/ui/use-toast';
+import { useQuery } from '@tanstack/react-query';
 import { TCompany } from '@/types';
 import { useRouter } from 'next/navigation';
+import { SelectItem } from '@/components/ui/select';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { supabaseUploadFile } from '@/lib/supabase';
+import { EMPLOYEE_OPTIONS } from '@/constants';
+import { getIndustriesAPI } from '@/fetcher/company';
+import { supabaseUpdateFile } from '@/lib/supabase';
 import { useEffect, useState } from 'react';
-import { parsingOptionsValue } from '@/lib/parser';
+import { updateCompanyOverviewAPI } from '@/fetcher/account';
 import { formCompanyOverviewSchema } from '@/lib/validations';
 import {
   InputCKEditor,
@@ -20,11 +24,6 @@ import {
   InputWrapper,
   UploadImage,
 } from '@/components/atoms';
-import {
-  EMPLOYEE_OPTIONS,
-  INDUSTRY_OPTIONS,
-  LOCATION_OPTIONS,
-} from '@/constants';
 
 interface TabOverviewProps {
   company: TCompany;
@@ -32,8 +31,11 @@ interface TabOverviewProps {
 
 const TabOverview = ({ company }: TabOverviewProps) => {
   const [editorLoaded, setEditorLoaded] = useState<boolean>(false);
-  const { toast } = useToast();
   const router = useRouter();
+  const industries = useQuery({
+    queryKey: ['industries'],
+    queryFn: getIndustriesAPI,
+  });
 
   const form = useForm<z.infer<typeof formCompanyOverviewSchema>>({
     resolver: zodResolver(formCompanyOverviewSchema),
@@ -54,58 +56,59 @@ const TabOverview = ({ company }: TabOverviewProps) => {
 
   const onSubmit = async (val: z.infer<typeof formCompanyOverviewSchema>) => {
     try {
-      /// if user update logo
+      /// if user update logo, update file in supabase
       if (typeof val.logo === 'object') {
-        const { filename } = await supabaseUploadFile(val.logo, 'images');
+        const { filename } = await supabaseUpdateFile(
+          val.logo,
+          company.logo,
+          'images'
+        );
         val.logo = filename;
       } else {
-        val.logo = company?.logo;
+        val.logo = company.logo;
       }
 
-      const res = await fetch(`/api/v1/company/${company?.id}/overview`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(val),
-      });
+      const data = {
+        ...val,
+        isCompleted: true,
+      };
 
-      if (!res.ok) {
-        throw new Error('Something wrong, please try again!');
+      const res = await updateCompanyOverviewAPI(data);
+      if (res.status === 'error') {
+        throw new Error(res.message);
       }
 
       toast({
         title: 'Success',
-        description: 'Update profile company success',
+        description: res.message,
       });
 
       router.refresh();
     } catch (error) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Something wrong, please try again!',
-      });
+      if (error instanceof Error) {
+        toast({
+          variant: 'destructive',
+          title: 'Update failed',
+          description: error.message,
+        });
+      }
     }
   };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-7">
-        {/* COMPANY LOGO */}
         <InputWrapper
           title="Company Logo"
           description="This image will be shown publicly as company logo."
         >
           <UploadImage form={form} name="logo" defaultValue={company?.logo} />
         </InputWrapper>
-
         <InputWrapper
           title="Company Details"
           description="Introduce your company core info quickly to users by fill up company details"
         >
           <div className="space-y-5">
-            {/* COMPANY NAME */}
             <InputText
               control={form.control}
               name="name"
@@ -113,8 +116,6 @@ const TabOverview = ({ company }: TabOverviewProps) => {
               label="Company Name"
               placeholder="facebook"
             />
-
-            {/* WEBSITE */}
             <InputText
               control={form.control}
               name="website"
@@ -122,37 +123,41 @@ const TabOverview = ({ company }: TabOverviewProps) => {
               label="Website"
               placeholder="https://company.com"
             />
-
-            {/* LOCATION */}
-            <InputSelect
+            <InputText
               control={form.control}
               name="location"
-              options={LOCATION_OPTIONS}
+              type="text"
               label="Location"
-              placeholder="Select your location"
+              placeholder="Location by city"
             />
-
             <div className="grid grid-cols-2 gap-4">
-              {/* EMPLOYEE TOTAL */}
               <InputSelect
                 control={form.control}
                 name="employee"
-                options={parsingOptionsValue(EMPLOYEE_OPTIONS)}
                 label="Employee"
                 placeholder="Select range your employee"
-              />
-
-              {/* INDUSTRY */}
+              >
+                {EMPLOYEE_OPTIONS.map((item: string, index: number) => (
+                  <SelectItem key={index} value={item}>
+                    {item}
+                  </SelectItem>
+                ))}
+              </InputSelect>
               <InputSelect
                 control={form.control}
                 name="industry"
-                options={INDUSTRY_OPTIONS}
                 label="Industry"
-                placeholder="Select your industry"
-              />
+                placeholder={
+                  industries.isLoading ? 'Loading...' : 'Select your industry'
+                }
+              >
+                {industries?.data?.data?.map((item: Record<string, string>) => (
+                  <SelectItem key={item.id} value={item.name}>
+                    {item.name}
+                  </SelectItem>
+                ))}
+              </InputSelect>
             </div>
-
-            {/* DATE FOUNDED */}
             <InputDate
               control={form.control}
               name="dateFounded"
@@ -160,8 +165,6 @@ const TabOverview = ({ company }: TabOverviewProps) => {
             />
           </div>
         </InputWrapper>
-
-        {/* ABOUT */}
         <InputWrapper
           title="About Company"
           description="Brief description for your company. URLs are hyperlinked."
@@ -172,8 +175,6 @@ const TabOverview = ({ company }: TabOverviewProps) => {
             editorLoaded={editorLoaded}
           />
         </InputWrapper>
-
-        {/* BUTTON */}
         <div className="flex justify-end">
           <Button size="lg" disabled={form.formState.isSubmitting}>
             {form.formState.isSubmitting ? 'Loading...' : 'Save Changes'}

@@ -5,8 +5,8 @@ const formCompanySettingSchema = z
     username: z
       .string({ required_error: 'Username is required' })
       .regex(new RegExp(/^[a-z0-9]+$/), 'Username only contain alpha numeric')
-      .min(5)
-      .max(55),
+      .min(5, 'Username must be at least 5 characters')
+      .max(55, 'Username maximum 55 characters'),
     email: z
       .string({ required_error: 'Email is required' })
       .email('Please use valid email'),

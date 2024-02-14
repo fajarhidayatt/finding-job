@@ -1,18 +1,20 @@
 'use client';
 
 import { z } from 'zod';
+import { toast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
+import { useQuery } from '@tanstack/react-query';
 import { TCategory } from '@/types';
+import { useRouter } from 'next/navigation';
 import { JOB_TYPES } from '@/constants';
 import { SelectItem } from '@/components/ui/select';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { formJobSchema } from '@/lib/validations';
 import { RadioGroupItem } from '@/components/ui/radio-group';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { useToast } from '@/components/ui/use-toast';
-import { useCallback, useEffect, useState } from 'react';
+import { getCategoriesAPI } from '@/fetcher/job';
+import { postJobCompanyAPI } from '@/fetcher/account';
+import { useEffect, useState } from 'react';
 import { Form, FormControl, FormItem, FormLabel } from '@/components/ui/form';
 import {
   InputBenefit,
@@ -27,31 +29,30 @@ import {
 
 const PostJobPage = () => {
   const [editorLoaded, setEditorLoaded] = useState<boolean>(false);
-  const [categories, setCategories] = useState<TCategory[]>([]);
-  const { data: session } = useSession();
-  const { toast } = useToast();
   const router = useRouter();
+
+  const categories = useQuery({
+    queryKey: ['categories'],
+    queryFn: getCategoriesAPI,
+  });
 
   const form = useForm<z.infer<typeof formJobSchema>>({
     resolver: zodResolver(formJobSchema),
+    defaultValues: {
+      role: '',
+      totalNeeds: '',
+      salaryFrom: '',
+      salaryTo: '',
+      description: '',
+    },
   });
-
-  const dataCategories = useCallback(async () => {
-    const res = await fetch('/api/v1/jobs/categories');
-    const data = await res.json();
-
-    setCategories(data.data);
-  }, []);
 
   useEffect(() => {
     setEditorLoaded(true);
-    dataCategories();
-  }, [dataCategories]);
+  }, []);
 
   const onSubmit = async (val: z.infer<typeof formJobSchema>) => {
     try {
-      const companyId = session?.user.id;
-
       const data = {
         role: val.role,
         description: val.description,
@@ -63,33 +64,28 @@ const PostJobPage = () => {
         benefits: val.benefits,
         categoryId: val.categoryId,
         totalNeeds: Number(val.totalNeeds),
-        companyId,
       };
 
-      const res = await fetch(`/api/v1/company/${companyId}/job`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
+      const res = await postJobCompanyAPI(data);
 
-      if (!res.ok) {
-        throw new Error('Something wrong, please try again!');
+      if (res.status === 'error') {
+        throw new Error(res.message);
       }
 
       toast({
         title: 'Success',
-        description: 'Success post a job, redirecting...',
+        description: res.message + ' redirecting...',
       });
-
+      router.refresh();
       router.back();
     } catch (error) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Something wrong, please try again!',
-      });
+      if (error instanceof Error) {
+        toast({
+          variant: 'destructive',
+          title: 'Failed',
+          description: error.message,
+        });
+      }
     }
   };
 
@@ -121,7 +117,7 @@ const PostJobPage = () => {
                 control={form.control}
                 name="totalNeeds"
                 type="number"
-                placeholder="e.g. 100"
+                placeholder="100"
               />
             </InputWrapper>
 
@@ -176,11 +172,11 @@ const PostJobPage = () => {
                 control={form.control}
                 name="categoryId"
                 placeholder={
-                  categories.length > 0 ? 'Select job category' : 'Loading...'
+                  categories.isLoading ? 'Loading' : 'Select job category'
                 }
               >
-                {categories.length > 0 &&
-                  categories.map((category: TCategory) => (
+                {!categories.isLoading &&
+                  categories?.data?.data?.map((category: TCategory) => (
                     <SelectItem key={category.id} value={category.id}>
                       {category.name}
                     </SelectItem>
