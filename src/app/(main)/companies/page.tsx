@@ -43,8 +43,8 @@ const CompaniesPage = () => {
         <FormFilter
           title="Industry"
           fitlerName="industry"
-          isLoading={industries.isLoading}
-          filterList={industries.isLoading ? [] : industries.data.data}
+          isLoading={industries?.isLoading}
+          filterList={industries?.isLoading ? [] : industries?.data?.data}
         />
         <div className="w-full">
           <div className="mb-8 flex items-center justify-between">
@@ -53,15 +53,16 @@ const CompaniesPage = () => {
                 All Companies
               </h3>
               <p className="text-muted-foreground">
-                Showing {companies.isLoading ? 0 : companies.data.data.length}{' '}
+                Showing{' '}
+                {companies?.isLoading ? 0 : companies?.data?.data?.length}{' '}
                 Result
               </p>
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {companies.isLoading
+            {companies?.isLoading
               ? 'Loading...'
-              : companies.data.data.map((company: TCompany) => (
+              : companies?.data?.data?.map((company: TCompany) => (
                   <CompanyCard key={company.id} company={company} />
                 ))}
           </div>

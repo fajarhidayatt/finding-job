@@ -43,20 +43,20 @@ const JobsPage = () => {
         <FormFilter
           title="Category"
           fitlerName="category"
-          isLoading={categories.isLoading}
-          filterList={categories.isLoading ? [] : categories.data.data}
+          isLoading={categories?.isLoading}
+          filterList={categories?.isLoading ? [] : categories?.data?.data}
         />
         <div className="w-full">
           <div>
             <h3 className="text-2xl sm:text-3xl font-semibold">All Jobs</h3>
             <p className="text-muted-foreground">
-              Showing {jobs.isLoading ? 0 : jobs.data.data.length} Result
+              Showing {jobs?.isLoading ? 0 : jobs?.data?.data?.length} Result
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-8">
-            {jobs.isLoading
+            {jobs?.isLoading
               ? 'Loading...'
-              : jobs.data.data.map((job: TJob) => (
+              : jobs?.data?.data?.map((job: TJob) => (
                   <JobCard
                     key={job.id}
                     id={job.id}
