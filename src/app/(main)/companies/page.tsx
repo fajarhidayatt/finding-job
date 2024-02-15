@@ -1,10 +1,10 @@
 'use client';
 
 import { TCompany } from '@/types';
-import { useQuery } from '@tanstack/react-query';
-import { useSearchParams } from 'next/navigation';
-import { getCompaniesAPI, getIndustriesAPI } from '@/fetcher/company';
+import { industryPlaceholder } from '@/lib/placeholder';
+import { useCompanies, useIndustries } from '@/features/companies';
 import {
+  CardSkeleton,
   CompanyCard,
   FormFilter,
   FormSearch,
@@ -12,16 +12,12 @@ import {
 } from '@/components/molecules';
 
 const CompaniesPage = () => {
-  const searchParams = useSearchParams().toString() || 'name=&location=';
-
-  const industries = useQuery({
-    queryKey: ['industries'],
-    queryFn: getIndustriesAPI,
+  const { data: industries, isFetching: isFetchingIndustries } = useIndustries({
+    data: industryPlaceholder(6),
   });
 
-  const companies = useQuery({
-    queryKey: ['companies', searchParams],
-    queryFn: () => getCompaniesAPI(searchParams),
+  const { data: companies, isFetching: isFetchingCompanies } = useCompanies({
+    data: [1, 2],
   });
 
   return (
@@ -39,12 +35,12 @@ const CompaniesPage = () => {
           formDescription="Popular: Tokopedia, Gojek, eFishery, Blibli"
         />
       </TopSection>
-      <section className="container flex items-start justify-center gap-10 py-12 sm:py-16">
+      <section className="container px-5 sm:px-8 py-12 sm:py-16 flex items-start justify-center gap-10 relative">
         <FormFilter
           title="Industry"
           fitlerName="industry"
-          isLoading={industries?.isLoading}
-          filterList={industries?.isLoading ? [] : industries?.data?.data}
+          isLoading={isFetchingIndustries}
+          filterList={industries?.data}
         />
         <div className="w-full">
           <div className="mb-8 flex items-center justify-between">
@@ -53,19 +49,25 @@ const CompaniesPage = () => {
                 All Companies
               </h3>
               <p className="text-muted-foreground">
-                Showing{' '}
-                {companies?.isLoading ? 0 : companies?.data?.data?.length}{' '}
+                Showing {isFetchingCompanies ? 0 : companies?.data?.length}{' '}
                 Result
               </p>
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {companies?.isLoading
-              ? 'Loading...'
-              : companies?.data?.data?.map((company: TCompany) => (
+            {!isFetchingCompanies
+              ? companies?.data?.map((company: TCompany) => (
                   <CompanyCard key={company.id} company={company} />
+                ))
+              : companies?.data?.map((item: number) => (
+                  <CardSkeleton key={item} type="company" />
                 ))}
           </div>
+          {!isFetchingCompanies && !companies?.data?.length ? (
+            <div className="text-center">
+              <h5 className="text-2xl font-medium">No companies :(</h5>
+            </div>
+          ) : null}
         </div>
       </section>
     </main>

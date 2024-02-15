@@ -1,43 +1,63 @@
 'use client';
 
-import Image from 'next/image';
+import Link from 'next/link';
 import { User } from 'next-auth';
-import { getImageSrc } from '@/lib/utils';
+import { TMenu } from '@/types';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import CompanyMenu from './CompanyMenu';
-import JobseekerMenu from './JobseekerMenu';
+
+import Menu from './Menu';
+import Avatar from '../Avatar';
 
 interface ProfileAccountProps {
   account: User;
+  onSignout: () => void;
 }
 
-const ProfileAccount = ({ account }: ProfileAccountProps) => {
+const ProfileAccount = ({ account, onSignout }: ProfileAccountProps) => {
+  const renderMenu = () => {
+    return Menu[account.role].map((menu: TMenu, index: number) => (
+      <li key={index}>
+        <Link
+          href={menu.href}
+          className="flex items-center gap-2 py-2.5 text-sm font-medium"
+        >
+          {menu.icon}
+          {menu.title}
+        </Link>
+      </li>
+    ));
+  };
+
   return (
     <Popover>
       <PopoverTrigger>
         <div className="flex items-center md:flex-row-reverse gap-2">
-          <div className="w-12 h-12 rounded-full overflow-hidden">
-            <Image
-              src={getImageSrc(account.image, account.name!!)}
-              width={45}
-              height={45}
-              alt="Profile picture"
-              className="w-full h-full object-cover"
-            />
-          </div>
+          <Avatar image={account.image} fallback={account.name!!} />
           <span>{account.name}</span>
         </div>
       </PopoverTrigger>
       <PopoverContent className="max-w-56 p-2.5" align="start">
-        {account.role === 'JOBSEEKER' ? (
-          <JobseekerMenu />
-        ) : account.role === 'COMPANY' ? (
-          <CompanyMenu />
-        ) : null}
+        <ul>
+          {Menu[account.role] && renderMenu()}
+          <li>
+            <Separator />
+          </li>
+          <li>
+            <Button
+              variant="ghost"
+              className="w-full mt-2.5 bg-red-500/10 hover:bg-red-500/20 text-red-500 hover:text-red-500"
+              onClick={onSignout}
+            >
+              Sign Out
+            </Button>
+          </li>
+        </ul>
       </PopoverContent>
     </Popover>
   );

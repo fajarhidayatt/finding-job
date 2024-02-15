@@ -1,4 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
 import TabApplicants from './_idPartials/TabApplicants';
 import TabJobDetail from './_idPartials/TabJobDetail';
 

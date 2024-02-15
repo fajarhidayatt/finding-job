@@ -1,21 +1,20 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { z } from 'zod';
 import { Form } from '@/components/ui/form';
 import { toast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
 import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
-import { logoDark } from '@/images';
-import { useRouter } from 'next/navigation';
-import { InputText } from '@/components/atoms';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { InputText, Logo } from '@/components/atoms';
 import { formSigninSchema } from '@/lib/validations';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const FormSignin = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const form = useForm<z.infer<typeof formSigninSchema>>({
     resolver: zodResolver(formSigninSchema),
     defaultValues: {
@@ -41,10 +40,11 @@ const FormSignin = () => {
         description: 'Welcome back!',
       });
 
-      router.refresh();
+      const redirectUrl = searchParams.get('callbackUrl') ?? '/';
 
       setTimeout(() => {
-        router.push('/');
+        router.push(redirectUrl);
+        router.refresh();
       }, 500);
     } catch (error) {
       if (error instanceof Error) {
@@ -59,9 +59,7 @@ const FormSignin = () => {
 
   return (
     <div className="max-w-80 w-full">
-      <Link href="/">
-        <Image src={logoDark} alt="logo" width={175} height={39} />
-      </Link>
+      <Logo variant="dark" width={175} heigth={39} />
       <div className="mt-10">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">

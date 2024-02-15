@@ -1,28 +1,45 @@
 'use client';
 
-import Link from 'next/link';
-import Image from 'next/image';
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
-import { logoDark } from '@/images';
-import { useSession } from 'next-auth/react';
-import { usePathname } from 'next/navigation';
 import { AlignJustify } from 'lucide-react';
-import { activeMenu, cn } from '@/lib/utils';
-import { ProfileAccount } from '@/components/atoms';
+import { signOut, useSession } from 'next-auth/react';
+import { ProfileAccount, Logo } from '@/components/atoms';
+import { usePathname, useRouter } from 'next/navigation';
+
+import NavLink from './NavLink';
 
 const Navbar = () => {
+  const router = useRouter();
   const pathname = usePathname();
   const [toggle, setToggle] = useState<boolean>(false);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
+  const handleNavigate = (path: string) => {
+    router.push(path);
+    setToggle(false);
+  };
+
+  const handleSignin = () => {
+    router.push('/signin?callbackUrl=' + pathname);
+  };
+
+  const handleSignout = () => {
+    signOut({ redirect: false });
+    setToggle(false);
+  };
+
+  const linkContainer = cn(
+    'w-full max-h-0 md:max-h-screen flex flex-col md:flex-row md:items-center gap-3 overflow-hidden transition-max-height duration-500 md:ml-10',
+    toggle && 'max-h-screen'
+  );
 
   return (
-    <nav className="max-w-screen-xl w-full mx-auto container py-3 bg-white">
+    <nav className="container px-5 sm:px-8 py-3 bg-white">
       <div className="flex flex-col md:flex-row md:items-center">
         <div className="flex items-center justify-between">
-          <Link href="/" className="w-48">
-            <Image src={logoDark} alt="logo" width={192} height={43} />
-          </Link>
+          <Logo variant="dark" />
           <Button
             size="icon"
             className="md:hidden"
@@ -31,63 +48,41 @@ const Navbar = () => {
             <AlignJustify />
           </Button>
         </div>
-        <div
-          className={cn(
-            'w-full max-h-0 md:max-h-screen flex flex-col md:flex-row md:items-center gap-3 overflow-hidden transition-max-height duration-500 md:ml-10',
-            toggle && 'max-h-screen'
-          )}
-        >
+        <div className={linkContainer}>
           <ul className="w-full flex flex-col md:flex-row gap-3 md:gap-5 mt-5 md:mt-0">
-            <li>
-              <Link
-                href="/"
-                className={cn(
-                  'font-medium text-muted-foreground hover:text-primary',
-                  activeMenu(pathname, /^\/$/)
-                )}
-              >
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/jobs"
-                className={cn(
-                  'font-medium text-muted-foreground hover:text-primary',
-                  activeMenu(pathname, /^\/jobs\/*/)
-                )}
-              >
-                Jobs
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/companies"
-                className={cn(
-                  'font-medium text-muted-foreground hover:text-primary',
-                  activeMenu(pathname, /^\/companies\/*/)
-                )}
-              >
-                Companies
-              </Link>
-            </li>
+            <NavLink
+              title="Home"
+              active={pathname === '/'}
+              onClick={() => handleNavigate('/')}
+            />
+            <NavLink
+              title="Jobs"
+              active={pathname.startsWith('/jobs')}
+              onClick={() => handleNavigate('/jobs')}
+            />
+            <NavLink
+              title="Companies"
+              active={pathname.startsWith('/companies')}
+              onClick={() => handleNavigate('/companies')}
+            />
           </ul>
-          {session ? (
-            <ProfileAccount account={session.user} />
-          ) : (
-            <div className="flex flex-col md:flex-row md:items-center gap-3">
-              <Link href="/signin">
-                <Button
-                  variant="outline"
-                  className="w-full border-primary text-primary hover:bg-primary/10 hover:text-primary"
-                >
-                  Sign In
-                </Button>
-              </Link>
-              <Link href="/signup">
-                <Button className="w-full">Sign Up</Button>
-              </Link>
+          {status === 'unauthenticated' ? (
+            <div className="min-h-12 flex flex-col md:flex-row md:items-center gap-3">
+              <Button
+                variant="outline"
+                className="w-full border-primary text-primary hover:bg-primary/10 hover:text-primary"
+                onClick={handleSignin}
+              >
+                Sign In
+              </Button>
+              <Button className="w-full" onClick={() => router.push('/signup')}>
+                Sign Up
+              </Button>
             </div>
+          ) : status === 'authenticated' ? (
+            <ProfileAccount account={session.user} onSignout={handleSignout} />
+          ) : (
+            <div className="h-12 w-12" />
           )}
         </div>
       </div>

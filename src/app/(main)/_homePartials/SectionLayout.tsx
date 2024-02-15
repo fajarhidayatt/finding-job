@@ -9,7 +9,7 @@ interface SectionLayoutProps {
 
 const SectionLayout = ({ title, url, children }: SectionLayoutProps) => {
   return (
-    <section className="container my-10 md:my-20">
+    <section className="container px-5 sm:px-8 my-10 md:my-20">
       <div className="flex items-center justify-between gap-5 mb-7">
         <div className="text-2xl sm:text-3xl md:text-4xl font-bold">
           {title[0]} <span className="text-primary">{title[1]}</span>

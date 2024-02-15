@@ -1,11 +1,11 @@
-import Image from 'next/image';
 import prisma from '@/lib/prisma';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
+import { Avatar } from '@/components/atoms';
 import { JobCard } from '@/components/molecules';
 import { Separator } from '@/components/ui/separator';
-import { getImageSrc } from '@/lib/utils';
 import { Building, Flame, MapPin, UsersRound } from 'lucide-react';
+
 import InfoItem from './_idPartials/InfoItem';
 
 interface DetailCompanyPageProps {
@@ -20,6 +20,7 @@ const DetailCompanyPage = async ({ params }: DetailCompanyPageProps) => {
       id: params.id,
     },
     include: {
+      socialMedia: true,
       jobs: {
         where: {
           dueDate: {
@@ -41,26 +42,24 @@ const DetailCompanyPage = async ({ params }: DetailCompanyPageProps) => {
   return (
     <main className="min-h-[calc(100vh-452px)]">
       <section className="bg-slate-100 py-10">
-        <div className="container">
-          <div className="w-full sm:w-10/12 mx-auto mt-10">
+        <div className="container px-5 sm:px-8">
+          <div className="w-full sm:w-10/12 mx-auto">
             <div className="flex items-center gap-5">
-              <div className="w-20 h-20 md:w-36 md:h-36">
-                <Image
-                  src={getImageSrc(company?.logo, company?.name!!)}
-                  alt="compnay profile"
-                  width={150}
-                  height={150}
-                  className="w-full h-full object-cover rounded-full"
+              <div className="w-20 h-20 md:w-32 md:h-32">
+                <Avatar
+                  image={company?.logo}
+                  fallback={company?.name!!}
+                  size={150}
                 />
               </div>
               <div>
                 <div className="flex items-center gap-4">
-                  <h1 className="text-3xl sm:text-4xl font-semibold">
+                  <h1 className="text-xl sm:text-2xl md:text-4xl font-semibold">
                     {company?.name}
                   </h1>
                   <Badge
                     variant="outline"
-                    className="border-primary rounded-none text-primary py-1.5 px-2.5"
+                    className="border-primary rounded-none text-primary py-1.5 px-2.5 whitespace-nowrap"
                   >
                     {company?._count.jobs} Jobs
                   </Badge>
@@ -94,9 +93,11 @@ const DetailCompanyPage = async ({ params }: DetailCompanyPageProps) => {
           </div>
         </div>
       </section>
-      <section className="container py-16 grid grid-cols-12 gap-5 md:gap-10">
-        <div className="col-span-full">
-          <h3 className="text-2xl font-semibold mb-3">Company Profile</h3>
+      <section className="container px-5 sm:px-8 py-8 sm:py-16">
+        <div>
+          <h3 className="text-xl sm:text-2xl font-semibold mb-3">
+            Company Profile
+          </h3>
           <div
             className="text-muted-foreground"
             dangerouslySetInnerHTML={{
@@ -104,26 +105,19 @@ const DetailCompanyPage = async ({ params }: DetailCompanyPageProps) => {
             }}
           ></div>
         </div>
-        <div className="col-span-full">
-          <Separator className="my-5 md:mt-0" />
-          <div className="mt-10">
-            <h3 className="text-2xl font-semibold">Jobs in {company?.name}</h3>
-            <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5 lg:gap-7">
-              {company?.jobs.map((job) => (
-                <JobCard
-                  key={job.id}
-                  id={job.id}
-                  role={job.role}
-                  jobType={job.jobType}
-                  jobCategory={job.category?.name!!}
-                  description={job.description}
-                  requiredSkills={job.requiredSkills}
-                  companyName={company.name}
-                  companyLogo={company.logo!!}
-                  companyLocation={company.location!!}
-                />
-              ))}
-            </div>
+        <Separator className="my-5 sm:my-8" />
+        <div>
+          <h3 className="text-xl sm:text-2xl font-semibold">
+            Jobs in {company?.name}
+          </h3>
+          <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5 lg:gap-7">
+            {company?.jobs ? (
+              company?.jobs.map((job: any) => (
+                <JobCard key={job.id} job={job} variant="company" />
+              ))
+            ) : (
+              <h6 className="text-center">No Jobs</h6>
+            )}
           </div>
         </div>
       </section>

@@ -1,29 +1,29 @@
-import prisma from '@/lib/prisma';
+'use client';
+
 import { TCategory } from '@/types';
-import { CategoryCard } from '@/components/molecules';
+import { useCategories } from '@/features/jobs';
+import { categoryPlaceholder } from '@/lib/placeholder';
+import { CardSkeleton, CategoryCard } from '@/components/molecules';
+
 import SectionLayout from './SectionLayout';
 
-const CategorySection = async () => {
-  const categories: TCategory[] = await prisma.jobCategory.findMany({
-    take: 8,
-    include: {
-      _count: {
-        select: { jobs: true },
-      },
-    },
+const CategorySection = () => {
+  const { data: categories, isFetching } = useCategories({
+    data: categoryPlaceholder(4),
   });
 
   return (
-    <SectionLayout title={['Explore by', 'category']} url="/categories">
+    <SectionLayout title={['Explore by', 'category']} url="/">
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 lg:gap-7">
-        {categories.map((category: TCategory) => (
-          <CategoryCard
-            key={category.id}
-            id={category.id}
-            name={category.name}
-            total={category._count?.jobs!!}
-          />
-        ))}
+        {!isFetching
+          ? categories?.data
+              .slice(0, 8)
+              .map((category: TCategory) => (
+                <CategoryCard key={category.id} category={category} />
+              ))
+          : categories?.data.map((category: TCategory) => (
+              <CardSkeleton key={category.id} type="category" />
+            ))}
       </div>
     </SectionLayout>
   );

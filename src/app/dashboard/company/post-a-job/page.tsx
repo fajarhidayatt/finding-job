@@ -4,15 +4,14 @@ import { z } from 'zod';
 import { toast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
-import { useQuery } from '@tanstack/react-query';
 import { TCategory } from '@/types';
 import { useRouter } from 'next/navigation';
 import { JOB_TYPES } from '@/constants';
 import { SelectItem } from '@/components/ui/select';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useCategories } from '@/features/jobs';
 import { formJobSchema } from '@/lib/validations';
 import { RadioGroupItem } from '@/components/ui/radio-group';
-import { getCategoriesAPI } from '@/fetcher/job';
 import { postJobCompanyAPI } from '@/fetcher/account';
 import { useEffect, useState } from 'react';
 import { Form, FormControl, FormItem, FormLabel } from '@/components/ui/form';
@@ -28,13 +27,11 @@ import {
 } from '@/components/atoms';
 
 const PostJobPage = () => {
-  const [editorLoaded, setEditorLoaded] = useState<boolean>(false);
   const router = useRouter();
+  const [editorLoaded, setEditorLoaded] = useState<boolean>(false);
 
-  const categories = useQuery({
-    queryKey: ['categories'],
-    queryFn: getCategoriesAPI,
-  });
+  const { data: categories, isFetching: isFetchingCategories } =
+    useCategories();
 
   const form = useForm<z.infer<typeof formJobSchema>>({
     resolver: zodResolver(formJobSchema),
@@ -76,7 +73,11 @@ const PostJobPage = () => {
         title: 'Success',
         description: res.message + ' redirecting...',
       });
-      router.refresh();
+
+      setTimeout(() => {
+        router.refresh();
+      }, 500);
+
       router.back();
     } catch (error) {
       if (error instanceof Error) {
@@ -172,11 +173,11 @@ const PostJobPage = () => {
                 control={form.control}
                 name="categoryId"
                 placeholder={
-                  categories.isLoading ? 'Loading' : 'Select job category'
+                  isFetchingCategories ? 'Loading' : 'Select job category'
                 }
               >
-                {!categories.isLoading &&
-                  categories?.data?.data?.map((category: TCategory) => (
+                {!isFetchingCategories &&
+                  categories?.data?.map((category: TCategory) => (
                     <SelectItem key={category.id} value={category.id}>
                       {category.name}
                     </SelectItem>

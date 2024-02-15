@@ -4,7 +4,7 @@ import { heroImg, patternHero, patternInk } from '@/images';
 
 const HeroSection = () => {
   return (
-    <section className="container flex items-center justify-between relative overflow-hidden">
+    <section className="container px-5 sm:px-8 flex items-center justify-between relative overflow-hidden">
       <div className="md:w-4/5 aspect-square absolute top-0 right-0 -z-10">
         <Image
           src={patternHero}

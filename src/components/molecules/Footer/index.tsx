@@ -1,5 +1,3 @@
-'use client';
-
 import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -33,7 +31,7 @@ const socialLinks: Record<string, string>[] = [
 const Footer = () => {
   return (
     <footer className="bg-slate-900">
-      <div className="container pt-10 pb-5">
+      <div className="container px-5 sm:px-8 pt-10 pb-5">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-8 lg:gap-4">
           {/* logo */}
           <section className="order-1 lg:col-span-2">
@@ -99,7 +97,7 @@ const Footer = () => {
         <Separator className="mt-10 mb-5 bg-neutral-300" />
 
         {/* copyright */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-5">
           <div className="text-neutral-300">
             2024 @FindingJob. All rights reserved.
           </div>

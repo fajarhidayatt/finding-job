@@ -1,6 +1,10 @@
-import { JsonValue } from '@prisma/client/runtime/library';
-
 export type TBucket = 'images' | 'resumes';
+
+export type TMenu = {
+  title: string;
+  href: string;
+  icon: React.ReactNode;
+};
 
 export type TAccount = {
   id: string;
@@ -10,6 +14,7 @@ export type TAccount = {
 };
 
 export type TBenefit = {
+  id?: string;
   name: string;
   description: string;
 };
@@ -17,9 +22,6 @@ export type TBenefit = {
 export type TCategory = {
   id: string;
   name: string;
-  _count?: {
-    jobs?: number;
-  };
 };
 
 export type TLink = {
@@ -70,7 +72,7 @@ export type TJob = {
   salaryFrom: string;
   salaryTo: string;
   requiredSkills: string[];
-  benefits: JsonValue[];
+  benefits: TBenefit[];
   companyId: string;
   company?: TCompany;
   categoryId: string;

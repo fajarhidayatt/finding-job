@@ -40,6 +40,7 @@ const FormSettings = ({ account }: FormSettingsProps) => {
         title: 'Success',
         description: res.message,
       });
+
       router.refresh();
     } catch (error) {
       if (error instanceof Error) {

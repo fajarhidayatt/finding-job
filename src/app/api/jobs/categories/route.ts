@@ -3,7 +3,15 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    const categories = await prisma.jobCategory.findMany();
+    const categories = await prisma.jobCategory.findMany({
+      include: {
+        _count: {
+          select: {
+            jobs: true,
+          },
+        },
+      },
+    });
 
     return NextResponse.json({
       status: 'success',

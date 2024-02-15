@@ -6,12 +6,13 @@ import { getServerSession } from 'next-auth';
 export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions);
-    const jobseekerId = session?.user.id;
     const { resume, coverLetter, jobId } = await request.json();
 
     if (!session) {
       throw new Error('Unauthorization');
     }
+
+    const jobseekerId = session.user.id;
 
     const isApply = await prisma.applicant.count({
       where: {

@@ -1,3 +1,5 @@
+import Logo from './Logo';
+import Avatar from './Avatar';
 import InputBenefit from './Input/InputBenefit';
 import InputCKEditor from './Input/InputCKEditor';
 import InputDate from './Input/InputDate';
@@ -13,6 +15,8 @@ import UploadImage from './UploadFIle/UploadImage';
 import UploadResume from './UploadFIle/UploadResume';
 
 export {
+  Logo,
+  Avatar,
   InputBenefit,
   InputCKEditor,
   InputDate,

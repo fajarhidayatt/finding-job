@@ -36,6 +36,7 @@ const TabSocialLinks = ({ links }: TabSocialLinksProps) => {
         title: 'Success',
         description: res.message,
       });
+
       router.refresh();
       setButtonDisabled(false);
     } catch (error) {

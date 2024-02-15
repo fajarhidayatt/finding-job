@@ -26,7 +26,7 @@ const clients: Record<string, StaticImageData | string>[] = [
 
 const ClientsSection = () => {
   return (
-    <section className="container my-10 md:my-16">
+    <section className="container px-5 sm:px-8 my-10 md:my-16">
       <h5 className="text-lg text-muted-foreground">
         Companies we helped grow
       </h5>

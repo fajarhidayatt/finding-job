@@ -3,6 +3,7 @@ import { TCompany } from '@/types';
 import { authOptions } from '@/lib/auth';
 import { getServerSession } from 'next-auth';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
 import TabOverview from './_profilePartials/TabOverview';
 import TabSocialLinks from './_profilePartials/TabSocialLinks';
 

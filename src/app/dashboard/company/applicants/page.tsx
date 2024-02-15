@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { TApplicant } from '@/types';
+import { authOptions } from '@/lib/auth';
 import { MoreVertical } from 'lucide-react';
 import { getServerSession } from 'next-auth';
 import {
@@ -13,7 +14,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { authOptions } from '@/lib/auth';
 
 const AllApplicants = async () => {
   const session = await getServerSession(authOptions);

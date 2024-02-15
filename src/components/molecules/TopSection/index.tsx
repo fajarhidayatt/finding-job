@@ -10,7 +10,7 @@ interface TopSectionProps {
 const TopSection = ({ title, description, children }: TopSectionProps) => {
   return (
     <section className="bg-slate-100 py-10 sm:py-16">
-      <div className="max-w-screen-xl w-full mx-auto container">
+      <div className="container px-5 sm:px-8">
         <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
           <h1 className="text-4xl sm:text-5xl font-semibold">{title[0]}</h1>
           <div className="relative">

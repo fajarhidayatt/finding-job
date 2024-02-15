@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { authOptions } from '@/lib/auth';
 import { getServerSession } from 'next-auth';
 import { MoreVertical, Plus } from 'lucide-react';
-import { JOB_LISTING_COLUMN } from '@/constants';
 import {
   Table,
   TableBody,
@@ -41,9 +40,13 @@ const JobListings = async () => {
         <Table>
           <TableHeader>
             <TableRow>
-              {JOB_LISTING_COLUMN.map((item: string, index: number) => (
-                <TableHead key={index}>{item}</TableHead>
-              ))}
+              <TableHead>Roles</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Date Posted</TableHead>
+              <TableHead>Due Date</TableHead>
+              <TableHead>Job Type</TableHead>
+              <TableHead>Applicants</TableHead>
+              <TableHead>Needs</TableHead>
               <TableHead>Action</TableHead>
             </TableRow>
           </TableHeader>

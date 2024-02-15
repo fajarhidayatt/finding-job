@@ -1,9 +1,6 @@
 import { EnumValues } from 'zod';
 
-export const GUEST_PAGES = /^\/sign*/;
-export const JOBSEEKER_PAGES = /^\/profile*/;
-export const COMPANY_PAGES = /^\/dashboard\/company*/;
-export const ADMIN_PAGES = /^\/dashboard\/admin*/;
+export const BASE_URL = process.env.NEXT_PUBLIC_APP_BASE_URL;
 
 export const ROLE_OPTIONS: EnumValues = ['JOBSEEKER', 'COMPANY'];
 
@@ -38,14 +35,4 @@ export const LINK_OPTIONS = [
   'Youtube',
   'Dribbble',
   'GitHub',
-] as const;
-
-export const JOB_LISTING_COLUMN: string[] = [
-  'Roles',
-  'Status',
-  'Date Posted',
-  'Due Date',
-  'Job Type',
-  'Applicants',
-  'Needs',
 ] as const;

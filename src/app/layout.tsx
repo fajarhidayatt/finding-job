@@ -28,6 +28,7 @@ export default function RootLayout({
           <body className={epilogue.className}>
             {children}
             <Toaster />
+            <ReactQueryDevtools buttonPosition="bottom-left" />
           </body>
         </html>
       </ReactQueryProvider>

@@ -44,38 +44,36 @@ export const authOptions = {
         if (account.jobseeker !== null) {
           return {
             id: account.jobseeker.id,
-            accountId: account.id,
-            email: account.email,
             name: account.username,
-            role: account.role,
+            email: account.email,
             image: account.jobseeker.photo,
+            role: account.role,
+            accountId: account.id,
           };
         } else if (account.company !== null) {
           return {
             id: account.company.id,
-            accountId: account.id,
-            email: account.email,
             name: account.username,
-            role: account.role,
+            email: account.email,
             image: account.company.logo,
+            role: account.role,
+            accountId: account.id,
           };
         }
 
         return {
           id: account.id,
-          accountId: account.id,
-          email: account.email,
           name: account.username,
-          role: account.role,
+          email: account.email,
           image: null,
+          role: account.role,
+          accountId: account.id,
         };
       },
     }),
   ],
   pages: {
-    signIn: '/auth/signin',
-    newUser: '/auth/signup',
-    signOut: '/',
+    signIn: '/signin',
   },
   callbacks: {
     jwt({ token, user }) {

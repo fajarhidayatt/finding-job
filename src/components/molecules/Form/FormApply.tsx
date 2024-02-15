@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { z } from 'zod';
 import { toast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
@@ -26,23 +25,22 @@ import {
 
 interface FormApplyProps {
   jobId: string;
-  role: string;
-  location: string;
-  jobType: string;
-  logo: string;
 }
 
-const FormApply = ({
-  jobId,
-  role,
-  logo,
-  location,
-  jobType,
-}: FormApplyProps) => {
+const FormApply = ({ jobId }: FormApplyProps) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
+
   const form = useForm<z.infer<typeof formApplySchema>>({
     resolver: zodResolver(formApplySchema),
+    defaultValues: {
+      fullname: '',
+      email: '',
+      phoneNumber: '',
+      linkedIn: '',
+      portofolio: '',
+      coverLetter: '',
+    },
   });
 
   const onSubmit = async (val: z.infer<typeof formApplySchema>) => {
@@ -65,6 +63,7 @@ const FormApply = ({
         title: 'Success',
         description: res.message,
       });
+
       setOpen(!open);
       router.refresh();
     } catch (error) {
@@ -84,28 +83,7 @@ const FormApply = ({
         <Button size="lg">Apply</Button>
       </DialogTrigger>
       <DialogContent className="max-w-screen-sm w-full max-h-screen overflow-y-scroll">
-        <div className="flex items-center gap-4">
-          <Image
-            src={logo}
-            alt="company profile"
-            width={60}
-            height={60}
-            className="rounded-full"
-          />
-          <div>
-            <h5 className="text-lg font-semibold">{role}</h5>
-            <p className="text-gray-500">
-              {location} . {jobType}
-            </p>
-          </div>
-        </div>
-        <Separator className="my-2.5" />
-        <div>
-          <h6 className="text-lg font-semibold">Submit your application</h6>
-          <p className="text-sm text-gray-500 mt-2">
-            The following is required and will only be shared with Nomad
-          </p>
-        </div>
+        <h6 className="text-lg font-semibold">Submit your application</h6>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="grid grid-cols-2 gap-6">
@@ -135,7 +113,6 @@ const FormApply = ({
             </div>
             <Separator className="my-6" />
             <div>
-              <h2 className="font-semibold mb-3">LINKS</h2>
               <div className="grid grid-cols-2 gap-6">
                 <InputText
                   control={form.control}

@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { Filter, X } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import ListSkeleton from '../Skeleton/ListSkeleton';
 
 interface FormFilterPorps {
   title: string;
@@ -77,20 +78,22 @@ const FormFilter = ({
             </Button>
           </div>
           <div className="mt-5 space-y-4 mb-5">
-            {isLoading && <p>Loading...</p>}
-            {filterList?.length > 0 &&
-              filterList.map((item) => (
-                <div key={item.id} className="flex gap-3 text-sm">
-                  <input
-                    type="checkbox"
-                    id={item.id}
-                    value={item.name}
-                    checked={filter.includes(item.name)}
-                    onChange={handleFilter}
-                  />
-                  <label htmlFor={item.id}>{item.name}</label>
-                </div>
-              ))}
+            {!isLoading
+              ? filterList.map((item) => (
+                  <div key={item.id} className="flex gap-3 text-sm">
+                    <input
+                      type="checkbox"
+                      id={item.id}
+                      value={item.name}
+                      checked={filter.includes(item.name)}
+                      onChange={handleFilter}
+                    />
+                    <label htmlFor={item.id}>{item.name}</label>
+                  </div>
+                ))
+              : filterList.map((item) => (
+                  <ListSkeleton key={item.id} type="category" />
+                ))}
           </div>
           <Separator />
           <div className="flex flex-col gap-3 mt-5">
@@ -102,7 +105,7 @@ const FormFilter = ({
         </div>
       </aside>
       <Button
-        className="flex items-center gap-2 absolute top-12 right-8 sm:top-16 lg:hidden"
+        className="flex items-center gap-2 absolute top-12 sm:top-16 right-5 sm:right-8 lg:hidden"
         onClick={() => setShowFilter(true)}
       >
         <Filter />
