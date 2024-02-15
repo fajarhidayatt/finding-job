@@ -76,7 +76,11 @@ const PostJobPage = () => {
         title: 'Success',
         description: res.message + ' redirecting...',
       });
-      router.refresh();
+
+      setTimeout(() => {
+        router.refresh();
+      }, 500);
+
       router.back();
     } catch (error) {
       if (error instanceof Error) {
